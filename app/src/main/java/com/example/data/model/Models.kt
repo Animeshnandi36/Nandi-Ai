@@ -21,7 +21,7 @@ data class ChatMessageEntity(
     val role: String, // "user" or "model"
     val content: String,
     val timestamp: Long = System.currentTimeMillis(),
-    val modelUsed: String = "gemini-3.5-flash",
+    val modelUsed: String = "llama-3.3-70b-versatile",
     val chartJson: String? = null,
     val codeSnippet: String? = null,
     val imageUri: String? = null,
@@ -83,9 +83,8 @@ data class ParsedChart(
 )
 
 enum class AiProviderType(val displayName: String, val badge: String) {
-    GEMINI("Google Gemini", "Fast & Reasoning"),
-    GROQ("Groq LPU", "Ultra Low Latency"),
-    HUGGING_FACE("Hugging Face", "Visual Diffusion"),
+    GROQ("Groq LPU", "Main AI & Ultra-Fast LLM"),
+    HUGGING_FACE("Hugging Face", "Visual Diffusion & Vision"),
     SEARCH("Web Grounding", "Live Knowledge")
 }
 

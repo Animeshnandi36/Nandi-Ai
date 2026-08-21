@@ -6,23 +6,11 @@ import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
 import retrofit2.converter.moshi.MoshiConverterFactory
-import retrofit2.http.Body
-import retrofit2.http.POST
-import retrofit2.http.Path
-import retrofit2.http.Query
 import java.util.concurrent.TimeUnit
 
-interface GeminiApiService {
-    @POST("v1beta/models/{model}:generateContent")
-    suspend fun generateContent(
-        @Path("model") model: String,
-        @Query("key") apiKey: String,
-        @Body request: GeminiRequest
-    ): GeminiResponse
-}
-
 object ApiClient {
-    private const val GEMINI_BASE_URL = "https://generativelanguage.googleapis.com/"
+    private const val GROQ_BASE_URL = "https://api.groq.com/"
+    private const val HF_BASE_URL = "https://api-inference.huggingface.co/"
 
     private val okHttpClient = OkHttpClient.Builder()
         .connectTimeout(60, TimeUnit.SECONDS)
@@ -37,12 +25,21 @@ object ApiClient {
         .add(KotlinJsonAdapterFactory())
         .build()
 
-    val geminiService: GeminiApiService by lazy {
+    val groqService: GroqApiService by lazy {
         Retrofit.Builder()
-            .baseUrl(GEMINI_BASE_URL)
+            .baseUrl(GROQ_BASE_URL)
             .client(okHttpClient)
             .addConverterFactory(MoshiConverterFactory.create(moshi))
             .build()
-            .create(GeminiApiService::class.java)
+            .create(GroqApiService::class.java)
+    }
+
+    val huggingFaceService: HuggingFaceApiService by lazy {
+        Retrofit.Builder()
+            .baseUrl(HF_BASE_URL)
+            .client(okHttpClient)
+            .addConverterFactory(MoshiConverterFactory.create(moshi))
+            .build()
+            .create(HuggingFaceApiService::class.java)
     }
 }

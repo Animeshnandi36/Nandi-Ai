@@ -186,10 +186,10 @@ fun ChatScreen(
                                         )
                                         Text(
                                             text = when {
-                                                model.contains("flash") -> "Ultra-fast response & reasoning"
-                                                model.contains("pro") -> "Deep cognitive analysis"
-                                                model.contains("llama") -> "Groq inference engine"
-                                                else -> "Fast generation"
+                                                model.contains("deepseek") -> "Groq DeepSeek R1 Reasoning"
+                                                model.contains("8b") -> "Groq Ultra-Instant Latency"
+                                                model.contains("mixtral") -> "Groq Mixture-of-Experts"
+                                                else -> "Groq Flagship Intelligence"
                                             },
                                             fontSize = 10.sp,
                                             color = TextMutedDark

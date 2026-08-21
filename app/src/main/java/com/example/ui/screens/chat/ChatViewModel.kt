@@ -21,12 +21,12 @@ import kotlinx.coroutines.launch
 data class ChatUiState(
     val currentSessionId: String = "",
     val availableModels: List<String> = listOf(
-        "gemini-3.5-flash",
-        "gemini-3.1-pro-preview",
         "llama-3.3-70b-versatile",
+        "deepseek-r1-distill-llama-70b",
+        "llama-3.1-8b-instant",
         "mixtral-8x7b-32768"
     ),
-    val selectedModel: String = "gemini-3.5-flash",
+    val selectedModel: String = "llama-3.3-70b-versatile",
     val isGenerating: Boolean = false,
     val errorMessage: String? = null,
     val inputText: String = ""

@@ -78,7 +78,7 @@ val sampleDocuments = listOf(
         title = "2026_AI_Industry_Report.pdf",
         type = "PDF Document",
         size = "1.4 MB",
-        content = "Executive Summary: In 2026, generative AI models like NandiAi and Gemini 3.5 have revolutionized enterprise computing. Key adoption indicators show a 142% surge in on-device neural inferencing...",
+        content = "Executive Summary: In 2026, generative AI models like NandiAi powered by Groq LPU and Hugging Face FLUX.1 have revolutionized enterprise computing. Key adoption indicators show a 142% surge in on-device neural inferencing...",
         summary = "Comprehensive market analysis showing hyper-growth in multimodal on-device AI adoption, reducing cloud latency by 68% and improving data privacy compliance across global enterprises.",
         keyPoints = listOf(
             "On-device inference adoption up 142% year-over-year.",
@@ -101,7 +101,7 @@ val sampleDocuments = listOf(
         title = "nandi_engine_architecture.json",
         type = "JSON Schema",
         size = "82 KB",
-        content = "{\n  \"engine\": \"NandiAi Core\",\n  \"version\": \"2026.1\",\n  \"developer\": \"Animesh Nandi\",\n  \"providers\": [\"gemini-3.5\", \"groq\", \"flux-1\"]\n}",
+        content = "{\n  \"engine\": \"NandiAi Core\",\n  \"version\": \"2026.1\",\n  \"developer\": \"Animesh Nandi\",\n  \"providers\": [\"groq-lpu\", \"hugging-face-flux\", \"local-room\"]\n}",
         summary = "System specification configuration declaring multi-provider fallback layers, Room local cache synchronization, and secure REST routing.",
         keyPoints = listOf(
             "Multi-provider failover guarantees 99.99% system availability.",
@@ -353,9 +353,11 @@ fun FileStudioScreen(
                             if (queryText.isNotBlank()) {
                                 scope.launch {
                                     isAnalyzing = true
-                                    delay(600)
-                                    val prompt = "Based on this document (${selectedDoc.title}): ${selectedDoc.content}\n\nAnswer this question: $queryText"
-                                    val answer = aiRepository.generateChatResponse(listOf("user" to prompt))
+                                    delay(400)
+                                    val answer = aiRepository.analyzeDocumentWithGroq(
+                                        content = selectedDoc.content,
+                                        query = queryText
+                                    )
                                     analysisResult = answer
                                     isAnalyzing = false
                                 }

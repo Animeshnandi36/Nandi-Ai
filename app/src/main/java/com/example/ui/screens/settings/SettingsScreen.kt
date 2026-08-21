@@ -227,7 +227,6 @@ fun SettingsScreen(
                         ) {
                             Icon(
                                 imageVector = when (provider.type) {
-                                    com.example.data.model.AiProviderType.GEMINI -> Icons.Default.AutoAwesome
                                     com.example.data.model.AiProviderType.GROQ -> Icons.Default.Speed
                                     com.example.data.model.AiProviderType.HUGGING_FACE -> Icons.Default.CloudDone
                                     com.example.data.model.AiProviderType.SEARCH -> Icons.Default.Security
