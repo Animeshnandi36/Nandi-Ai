@@ -6,6 +6,7 @@ import androidx.compose.animation.core.animateFloat
 import androidx.compose.animation.core.infiniteRepeatable
 import androidx.compose.animation.core.rememberInfiniteTransition
 import androidx.compose.animation.core.tween
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
@@ -68,12 +69,14 @@ import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalClipboardManager
 import androidx.compose.ui.platform.testTag
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.example.R
 import com.example.data.model.ChatMessageEntity
 import com.example.ui.components.CodeHighlightBlock
 import com.example.ui.components.NandiLogo
@@ -602,10 +605,10 @@ fun RenderFormattedMarkdown(text: String) {
 fun ThinkingBubble() {
     val infiniteTransition = rememberInfiniteTransition(label = "thinking")
     val alpha by infiniteTransition.animateFloat(
-        initialValue = 0.3f,
+        initialValue = 0.4f,
         targetValue = 1f,
         animationSpec = infiniteRepeatable(
-            animation = tween(600),
+            animation = tween(700),
             repeatMode = RepeatMode.Reverse
         ),
         label = "thinkAlpha"
@@ -616,26 +619,16 @@ fun ThinkingBubble() {
         horizontalArrangement = Arrangement.spacedBy(8.dp),
         modifier = Modifier.padding(vertical = 6.dp)
     ) {
-        Box(
-            modifier = Modifier
-                .size(26.dp)
-                .clip(CircleShape)
-                .background(Color(0xFF0A1B30))
-                .border(1.dp, NeonCyan.copy(alpha = 0.5f), CircleShape),
-            contentAlignment = Alignment.Center
-        ) {
-            Icon(
-                imageVector = Icons.Default.SmartToy,
-                contentDescription = null,
-                tint = NeonCyan,
-                modifier = Modifier.size(14.dp)
-            )
-        }
+        Image(
+            painter = painterResource(id = R.drawable.ic_nandi_ai_emblem),
+            contentDescription = "Nandi AI Reasoning",
+            modifier = Modifier.size(28.dp)
+        )
 
         Surface(
             shape = RoundedCornerShape(12.dp),
             color = CyberDarkCard,
-            border = androidx.compose.foundation.BorderStroke(1.dp, NeonCyan.copy(alpha = 0.3f))
+            border = androidx.compose.foundation.BorderStroke(1.dp, NeonCyan.copy(alpha = 0.4f * alpha))
         ) {
             Row(
                 modifier = Modifier.padding(horizontal = 12.dp, vertical = 8.dp),
@@ -643,10 +636,10 @@ fun ThinkingBubble() {
                 horizontalArrangement = Arrangement.spacedBy(6.dp)
             ) {
                 Text(
-                    text = "NandiAi is reasoning",
+                    text = "Nandi AI is reasoning",
                     fontSize = 11.sp,
                     color = NeonCyan.copy(alpha = alpha),
-                    fontWeight = FontWeight.Medium
+                    fontWeight = FontWeight.Bold
                 )
                 Box(modifier = Modifier.size(6.dp).clip(CircleShape).background(NeonCyan.copy(alpha = alpha)))
             }

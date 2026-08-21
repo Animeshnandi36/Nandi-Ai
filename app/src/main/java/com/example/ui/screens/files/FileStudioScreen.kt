@@ -52,6 +52,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.data.repository.AiRepository
 import com.example.ui.components.NandiFooter
+import com.example.ui.components.NandiLoadingCard
 import com.example.ui.components.NandiLogo
 import com.example.ui.theme.CyberDarkCard
 import com.example.ui.theme.CyberDarkSurfaceVariant
@@ -385,6 +386,16 @@ fun FileStudioScreen(
                         }
                     }
                 }
+            }
+        }
+
+        // Analyzing State Card
+        if (isAnalyzing) {
+            item {
+                NandiLoadingCard(
+                    statusText = "Analyzing Document Semantic Vectors...",
+                    subText = "Nandi AI Neural Document Intelligence"
+                )
             }
         }
 

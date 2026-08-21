@@ -47,6 +47,7 @@ import androidx.compose.ui.unit.sp
 import com.example.data.repository.AiRepository
 import com.example.ui.components.CodeHighlightBlock
 import com.example.ui.components.NandiFooter
+import com.example.ui.components.NandiLoadingCard
 import com.example.ui.components.NandiLogo
 import com.example.ui.theme.CyberDarkCard
 import com.example.ui.theme.CyberDarkSurfaceVariant
@@ -284,6 +285,16 @@ class GroqInferencePipeline(
                         }
                     }
                 }
+            }
+        }
+
+        // Generating Feedback Card
+        if (isGenerating) {
+            item {
+                NandiLoadingCard(
+                    statusText = "Compiling Abstract Syntax Tree & Semantic Logic...",
+                    subText = "Nandi AI LPU Code Engine ($selectedLang)"
+                )
             }
         }
 

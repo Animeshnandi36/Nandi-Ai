@@ -15,7 +15,9 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.RowScope
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
@@ -122,6 +124,170 @@ fun NandiLogo(
                 )
             }
         }
+    }
+}
+
+@Composable
+fun NandiTopAppBar(
+    modifier: Modifier = Modifier,
+    logoSize: Dp = 34.dp,
+    showLogoText: Boolean = true,
+    navigationIcon: (@Composable () -> Unit)? = null,
+    actions: (@Composable RowScope.() -> Unit)? = null
+) {
+    Surface(
+        color = CyberDarkSurface.copy(alpha = 0.95f),
+        border = androidx.compose.foundation.BorderStroke(1.dp, Color(0xFF1E2D4A).copy(alpha = 0.7f)),
+        shape = RoundedCornerShape(bottomStart = 14.dp, bottomEnd = 14.dp),
+        modifier = modifier
+            .fillMaxWidth()
+            .padding(horizontal = 4.dp, vertical = 2.dp)
+    ) {
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(horizontal = 12.dp, vertical = 8.dp),
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.SpaceBetween
+        ) {
+            Row(
+                verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.spacedBy(8.dp)
+            ) {
+                navigationIcon?.invoke()
+                NandiLogo(size = logoSize, showText = showLogoText)
+            }
+
+            if (actions != null) {
+                Row(
+                    verticalAlignment = Alignment.CenterVertically,
+                    horizontalArrangement = Arrangement.spacedBy(6.dp),
+                    content = actions
+                )
+            }
+        }
+    }
+}
+
+@Composable
+fun NandiLoadingIndicator(
+    modifier: Modifier = Modifier,
+    logoSize: Dp = 56.dp,
+    statusText: String = "Synthesizing Neural Intelligence...",
+    subText: String? = "Powered by Nandi AI Multi-Model Architecture"
+) {
+    val infiniteTransition = rememberInfiniteTransition(label = "nandi_pulse")
+    val pulseAlpha by infiniteTransition.animateFloat(
+        initialValue = 0.4f,
+        targetValue = 1f,
+        animationSpec = infiniteRepeatable(
+            animation = tween(1000),
+            repeatMode = RepeatMode.Reverse
+        ),
+        label = "logoPulse"
+    )
+    val ringRotation by infiniteTransition.animateFloat(
+        initialValue = 0f,
+        targetValue = 360f,
+        animationSpec = infiniteRepeatable(
+            animation = tween(3000, easing = androidx.compose.animation.core.LinearEasing),
+            repeatMode = RepeatMode.Restart
+        ),
+        label = "ringSpin"
+    )
+
+    Column(
+        modifier = modifier.padding(16.dp),
+        horizontalAlignment = Alignment.CenterHorizontally,
+        verticalArrangement = Arrangement.Center
+    ) {
+        Box(
+            modifier = Modifier.size(logoSize + 28.dp),
+            contentAlignment = Alignment.Center
+        ) {
+            // Rotating Cyber Glow Aura Ring
+            Canvas(modifier = Modifier.size(logoSize + 24.dp)) {
+                drawCircle(
+                    brush = Brush.sweepGradient(
+                        listOf(
+                            NeonCyan.copy(alpha = 0.1f),
+                            NeonCyan.copy(alpha = 0.8f * pulseAlpha),
+                            CyberGold.copy(alpha = 0.7f * pulseAlpha),
+                            NeonCyan.copy(alpha = 0.1f)
+                        )
+                    ),
+                    radius = (size.minDimension / 2f) * 0.95f,
+                    style = androidx.compose.ui.graphics.drawscope.Stroke(width = 2.5.dp.toPx())
+                )
+            }
+
+            // Official Emblem
+            Image(
+                painter = painterResource(id = R.drawable.ic_nandi_ai_emblem),
+                contentDescription = "Nandi AI Official Emblem Loading",
+                modifier = Modifier.size(logoSize)
+            )
+        }
+
+        Spacer(modifier = Modifier.height(14.dp))
+
+        Text(
+            text = statusText,
+            fontSize = 13.sp,
+            fontWeight = FontWeight.Bold,
+            color = NeonCyan,
+            textAlign = TextAlign.Center
+        )
+
+        if (subText != null) {
+            Spacer(modifier = Modifier.height(4.dp))
+            Text(
+                text = subText,
+                fontSize = 11.sp,
+                color = TextSecondaryDark,
+                textAlign = TextAlign.Center
+            )
+        }
+    }
+}
+
+@Composable
+fun NandiLoadingCard(
+    statusText: String,
+    modifier: Modifier = Modifier,
+    subText: String? = null
+) {
+    Surface(
+        shape = RoundedCornerShape(16.dp),
+        color = CyberDarkCard,
+        border = androidx.compose.foundation.BorderStroke(1.dp, NeonCyan.copy(alpha = 0.4f)),
+        modifier = modifier.fillMaxWidth()
+    ) {
+        NandiLoadingIndicator(
+            statusText = statusText,
+            subText = subText,
+            logoSize = 48.dp,
+            modifier = Modifier.fillMaxWidth().padding(12.dp)
+        )
+    }
+}
+
+@Composable
+fun NandiLoadingScreen(
+    statusText: String = "Initializing Nandi AI Neural Matrix...",
+    modifier: Modifier = Modifier
+) {
+    Box(
+        modifier = modifier
+            .fillMaxSize()
+            .background(MaterialTheme.colorScheme.background),
+        contentAlignment = Alignment.Center
+    ) {
+        NandiLoadingIndicator(
+            logoSize = 72.dp,
+            statusText = statusText,
+            subText = "Official Nandi AI System Active"
+        )
     }
 }
 

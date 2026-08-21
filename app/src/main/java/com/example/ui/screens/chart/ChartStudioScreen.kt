@@ -43,6 +43,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.ui.components.DynamicChartView
 import com.example.ui.components.NandiFooter
+import com.example.ui.components.NandiLoadingCard
 import com.example.ui.components.NandiLogo
 import com.example.ui.theme.CyberDarkCard
 import com.example.ui.theme.CyberDarkSurfaceVariant
@@ -218,6 +219,16 @@ fun ChartStudioScreen(
                         }
                     }
                 }
+            }
+        }
+
+        // Generating Feedback Card
+        if (uiState.isGenerating) {
+            item {
+                NandiLoadingCard(
+                    statusText = "Synthesizing Dataset & Visual Schema...",
+                    subText = "Nandi AI Data Intelligence Engine"
+                )
             }
         }
 

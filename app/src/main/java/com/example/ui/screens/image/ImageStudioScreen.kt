@@ -7,6 +7,7 @@ import androidx.compose.animation.core.animateFloat
 import androidx.compose.animation.core.infiniteRepeatable
 import androidx.compose.animation.core.rememberInfiniteTransition
 import androidx.compose.animation.core.tween
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
@@ -36,7 +37,6 @@ import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material.icons.filled.Download
 import androidx.compose.material.icons.filled.Favorite
 import androidx.compose.material.icons.filled.FavoriteBorder
-import androidx.compose.material.icons.filled.Image
 import androidx.compose.material.icons.filled.Share
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
@@ -58,10 +58,12 @@ import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.testTag
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import coil.compose.AsyncImage
+import com.example.R
 import com.example.ui.components.NandiFooter
 import com.example.ui.components.NandiLogo
 import com.example.ui.theme.CyberDarkCard
@@ -334,7 +336,7 @@ fun ImageStudioScreen(
                         horizontalAlignment = Alignment.CenterHorizontally
                     ) {
                         Icon(
-                            imageVector = Icons.Default.Image,
+                            imageVector = Icons.Default.AutoAwesome,
                             contentDescription = null,
                             tint = TextMutedDark,
                             modifier = Modifier.size(40.dp)
@@ -391,7 +393,7 @@ fun FuturisticLaserScanner(step: String) {
         border = androidx.compose.foundation.BorderStroke(1.dp, NeonCyan.copy(alpha = 0.6f)),
         modifier = Modifier
             .fillMaxWidth()
-            .height(180.dp)
+            .height(200.dp)
     ) {
         Box(modifier = Modifier.fillMaxSize()) {
             // Scanner Laser
@@ -400,7 +402,7 @@ fun FuturisticLaserScanner(step: String) {
                     .fillMaxWidth()
                     .height(3.dp)
                     .align(Alignment.TopCenter)
-                    .padding(top = (laserY * 160).dp)
+                    .padding(top = (laserY * 180).dp)
                     .background(
                         Brush.horizontalGradient(
                             listOf(Color.Transparent, NeonCyan, CyberGold, NeonCyan, Color.Transparent)
@@ -415,17 +417,23 @@ fun FuturisticLaserScanner(step: String) {
                 horizontalAlignment = Alignment.CenterHorizontally,
                 verticalArrangement = Arrangement.Center
             ) {
-                CircularProgressIndicator(
-                    modifier = Modifier.size(32.dp),
-                    color = NeonCyan,
-                    strokeWidth = 3.dp
+                Image(
+                    painter = painterResource(id = R.drawable.ic_nandi_ai_emblem),
+                    contentDescription = "Nandi AI Neural Synthesizer",
+                    modifier = Modifier.size(54.dp)
                 )
                 Spacer(modifier = Modifier.height(12.dp))
                 Text(
                     text = step,
                     fontSize = 12.sp,
-                    fontWeight = FontWeight.Medium,
+                    fontWeight = FontWeight.Bold,
                     color = NeonCyan
+                )
+                Spacer(modifier = Modifier.height(4.dp))
+                Text(
+                    text = "Nandi AI FLUX.1 Neural Engine",
+                    fontSize = 10.sp,
+                    color = TextSecondaryDark
                 )
             }
         }
