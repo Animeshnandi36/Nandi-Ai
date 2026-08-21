@@ -1,0 +1,114 @@
+<?xml version="1.0" encoding="utf-8"?>
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:aapt="http://schemas.android.com/aapt"
+    android:width="128dp"
+    android:height="128dp"
+    android:viewportWidth="128"
+    android:viewportHeight="128">
+
+    <!-- Dark Cyber Badge Base -->
+    <path
+        android:fillColor="#09101F"
+        android:pathData="M64,8 C94.93,8 120,33.07 120,64 C120,94.93 94.93,120 64,120 C33.07,120 8,94.93 8,64 C8,33.07 33.07,8 64,8 Z" />
+
+    <!-- Outer Glowing Neon Rings -->
+    <path
+        android:fillColor="#00000000"
+        android:strokeWidth="3"
+        android:pathData="M64,12 C92.72,12 116,35.28 116,64 C116,92.72 92.72,116 64,116 C35.28,116 12,92.72 12,64 C12,35.28 35.28,12 64,12 Z">
+        <aapt:attr name="android:strokeColor">
+            <gradient
+                android:startX="12"
+                android:startY="12"
+                android:endX="116"
+                android:endY="116"
+                android:type="linear">
+                <item android:color="#00F0FF" android:offset="0.0" />
+                <item android:color="#FFD700" android:offset="0.5" />
+                <item android:color="#00F0FF" android:offset="1.0" />
+            </gradient>
+        </aapt:attr>
+    </path>
+
+    <!-- Inner Metallic Gold Ring -->
+    <path
+        android:fillColor="#00000000"
+        android:strokeColor="#FFC72C"
+        android:strokeWidth="1.5"
+        android:pathData="M64,18 C89.41,18 110,38.59 110,64 C110,89.41 89.41,110 64,110 C38.59,110 18,89.41 18,64 C18,38.59 38.59,18 64,18 Z" />
+
+    <!-- Neural Brain / Circuit Top Nodes -->
+    <path
+        android:fillColor="#00E5FF"
+        android:pathData="M64,24 L69,32 L64,40 L59,32 Z" />
+    <path
+        android:fillColor="#00000000"
+        android:strokeColor="#00E5FF"
+        android:strokeWidth="1"
+        android:pathData="M59,32 L48,32 L44,26 M69,32 L80,32 L84,26" />
+
+    <!-- Left Bull Horn -->
+    <path
+        android:fillColor="#00E5FF"
+        android:pathData="M46,54 C40,43 38,32 48,29 C52,28 52,34 49,42 C47,47 50,52 53,55 Z" />
+    <path
+        android:fillColor="#FFD700"
+        android:pathData="M48,29 C50,28 52,34 49,42 C48,38 48,33 48,29 Z" />
+
+    <!-- Right Bull Horn -->
+    <path
+        android:fillColor="#00E5FF"
+        android:pathData="M82,54 C88,43 90,32 80,29 C76,28 76,34 79,42 C81,47 78,52 75,55 Z" />
+    <path
+        android:fillColor="#FFD700"
+        android:pathData="M80,29 C78,28 76,34 79,42 C80,38 80,33 80,29 Z" />
+
+    <!-- Cyber Bull Face Shield -->
+    <path
+        android:fillColor="#142845"
+        android:strokeColor="#FFD700"
+        android:strokeWidth="2"
+        android:pathData="M50,50 L78,50 L73,72 L64,88 L55,72 Z" />
+
+    <!-- Glowing Blue Cyber Eyes -->
+    <path
+        android:fillColor="#00FFFF"
+        android:pathData="M56,60 L61,60 L58,64 Z" />
+    <path
+        android:fillColor="#00FFFF"
+        android:pathData="M67,60 L72,60 L70,64 Z" />
+
+    <!-- Cyber Muzzle / Nose Plate -->
+    <path
+        android:fillColor="#FFC72C"
+        android:pathData="M59,75 L69,75 L67,81 L61,81 Z" />
+    <path
+        android:fillColor="#00000000"
+        android:strokeColor="#00E5FF"
+        android:strokeWidth="1.5"
+        android:pathData="M60,82 C60,86 68,86 68,82" />
+
+    <!-- Circuit tracks branching out -->
+    <path
+        android:fillColor="#00000000"
+        android:strokeColor="#38BDF8"
+        android:strokeWidth="1.5"
+        android:pathData="M38,64 L26,64 L20,72 M90,64 L102,64 L108,72 M36,75 L28,81 M92,75 L100,81" />
+    <path
+        android:fillColor="#FFD700"
+        android:pathData="M20,72 m-2,0 a2,2 0 1,0 4,0 a2,2 0 1,0 -4,0" />
+    <path
+        android:fillColor="#FFD700"
+        android:pathData="M108,72 m-2,0 a2,2 0 1,0 4,0 a2,2 0 1,0 -4,0" />
+    <path
+        android:fillColor="#00E5FF"
+        android:pathData="M28,81 m-1.5,0 a1.5,1.5 0 1,0 3,0 a1.5,1.5 0 1,0 -3,0" />
+    <path
+        android:fillColor="#00E5FF"
+        android:pathData="M100,81 m-1.5,0 a1.5,1.5 0 1,0 3,0 a1.5,1.5 0 1,0 -3,0" />
+
+    <!-- Tech Banner Base -->
+    <path
+        android:fillColor="#00F0FF"
+        android:pathData="M44,98 L84,98 L80,101 L48,101 Z" />
+</vector>

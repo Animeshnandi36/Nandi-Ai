@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="utf-8"?>
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:aapt="http://schemas.android.com/aapt"
+    android:width="108dp"
+    android:height="108dp"
+    android:viewportWidth="108"
+    android:viewportHeight="108">
+
+    <!-- Outer glowing tech ring -->
+    <path
+        android:fillColor="#00000000"
+        android:pathData="M54,22 C71.67,22 86,36.33 86,54 C86,71.67 71.67,86 54,86 C36.33,86 22,71.67 22,54 C22,36.33 36.33,22 54,22 Z"
+        android:strokeWidth="2.5">
+        <aapt:attr name="android:strokeColor">
+            <gradient
+                android:startX="22"
+                android:startY="22"
+                android:endX="86"
+                android:endY="86"
+                android:type="linear">
+                <item android:color="#00E5FF" android:offset="0.0" />
+                <item android:color="#FFD700" android:offset="0.5" />
+                <item android:color="#00E5FF" android:offset="1.0" />
+            </gradient>
+        </aapt:attr>
+    </path>
+
+    <!-- Nandi Bull Horns (Left & Right) -->
+    <!-- Left Horn -->
+    <path
+        android:fillColor="#00E5FF"
+        android:pathData="M39,45 C35,36 34,27 42,25 C45,24 45,29 42,35 C40,39 42,43 45,46 Z" />
+    <!-- Right Horn -->
+    <path
+        android:fillColor="#00E5FF"
+        android:pathData="M69,45 C73,36 74,27 66,25 C63,24 63,29 66,35 C68,39 66,43 63,46 Z" />
+
+    <!-- Bull Head Face & Cyber Shield -->
+    <path
+        android:fillColor="#12253E"
+        android:strokeColor="#FFD700"
+        android:strokeWidth="1.8"
+        android:pathData="M42,42 L66,42 L62,60 L54,74 L46,60 Z" />
+
+    <!-- AI Neural Core / Forehead Brain Diamond -->
+    <path
+        android:fillColor="#00E5FF"
+        android:pathData="M54,34 L59,41 L54,48 L49,41 Z" />
+
+    <!-- Glowing Cyber Eyes -->
+    <path
+        android:fillColor="#00FFF0"
+        android:pathData="M48,50 L52,50 L50,53 Z" />
+    <path
+        android:fillColor="#00FFF0"
+        android:pathData="M56,50 L60,50 L58,53 Z" />
+
+    <!-- Bull Muzzle & Tech Ring -->
+    <path
+        android:fillColor="#FFD700"
+        android:pathData="M50,62 L58,62 L56,67 L52,67 Z" />
+    <path
+        android:fillColor="#00000000"
+        android:strokeColor="#00E5FF"
+        android:strokeWidth="1.2"
+        android:pathData="M51,68 C51,71 57,71 57,68" />
+
+    <!-- Circuit traces around head -->
+    <path
+        android:fillColor="#00000000"
+        android:strokeColor="#38BDF8"
+        android:strokeWidth="1.2"
+        android:pathData="M32,54 L25,54 M30,62 L24,66 M76,54 L83,54 M78,62 L84,66" />
+    <path
+        android:fillColor="#FFD700"
+        android:pathData="M24,54 m-1.5,0 a1.5,1.5 0 1,0 3,0 a1.5,1.5 0 1,0 -3,0" />
+    <path
+        android:fillColor="#FFD700"
+        android:pathData="M84,54 m-1.5,0 a1.5,1.5 0 1,0 3,0 a1.5,1.5 0 1,0 -3,0" />
+</vector>

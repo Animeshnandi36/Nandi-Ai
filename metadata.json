@@ -1,0 +1,6 @@
+{
+  "name": "NandiAi",
+  "description": "Production-ready AI workspace with chat, image studio, charts, document intelligence, code generation, and project workspaces developed by Animesh Nandi.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
