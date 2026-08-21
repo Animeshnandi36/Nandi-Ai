@@ -1,114 +1,279 @@
 <?xml version="1.0" encoding="utf-8"?>
 <vector xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:aapt="http://schemas.android.com/aapt"
-    android:width="128dp"
-    android:height="128dp"
-    android:viewportWidth="128"
-    android:viewportHeight="128">
+    android:width="256dp"
+    android:height="256dp"
+    android:viewportWidth="256"
+    android:viewportHeight="256">
 
-    <!-- Dark Cyber Badge Base -->
+    <!-- 1. Background Circular Canvas -->
     <path
-        android:fillColor="#09101F"
-        android:pathData="M64,8 C94.93,8 120,33.07 120,64 C120,94.93 94.93,120 64,120 C33.07,120 8,94.93 8,64 C8,33.07 33.07,8 64,8 Z" />
-
-    <!-- Outer Glowing Neon Rings -->
-    <path
-        android:fillColor="#00000000"
-        android:strokeWidth="3"
-        android:pathData="M64,12 C92.72,12 116,35.28 116,64 C116,92.72 92.72,116 64,116 C35.28,116 12,92.72 12,64 C12,35.28 35.28,12 64,12 Z">
-        <aapt:attr name="android:strokeColor">
+        android:pathData="M128,8 C194.28,8 248,61.72 248,128 C248,194.28 194.28,248 128,248 C61.72,248 8,194.28 8,128 C8,61.72 61.72,8 128,8 Z">
+        <aapt:attr name="android:fillColor">
             <gradient
-                android:startX="12"
-                android:startY="12"
-                android:endX="116"
-                android:endY="116"
-                android:type="linear">
-                <item android:color="#00F0FF" android:offset="0.0" />
-                <item android:color="#FFD700" android:offset="0.5" />
-                <item android:color="#00F0FF" android:offset="1.0" />
+                android:centerX="128"
+                android:centerY="128"
+                android:gradientRadius="124"
+                android:type="radial">
+                <item android:color="#0B1C33" android:offset="0.0" />
+                <item android:color="#060F1E" android:offset="0.7" />
+                <item android:color="#020710" android:offset="1.0" />
             </gradient>
         </aapt:attr>
     </path>
 
-    <!-- Inner Metallic Gold Ring -->
+    <!-- 2. Outer Soft Neon Glow Circle -->
     <path
         android:fillColor="#00000000"
-        android:strokeColor="#FFC72C"
-        android:strokeWidth="1.5"
-        android:pathData="M64,18 C89.41,18 110,38.59 110,64 C110,89.41 89.41,110 64,110 C38.59,110 18,89.41 18,64 C18,38.59 38.59,18 64,18 Z" />
-
-    <!-- Neural Brain / Circuit Top Nodes -->
-    <path
-        android:fillColor="#00E5FF"
-        android:pathData="M64,24 L69,32 L64,40 L59,32 Z" />
-    <path
-        android:fillColor="#00000000"
+        android:strokeWidth="10"
+        android:strokeAlpha="0.25"
         android:strokeColor="#00E5FF"
-        android:strokeWidth="1"
-        android:pathData="M59,32 L48,32 L44,26 M69,32 L80,32 L84,26" />
+        android:pathData="M128,18 C188.75,18 238,67.25 238,128 C238,188.75 188.75,238 128,238 C67.25,238 18,188.75 18,128 C18,67.25 67.25,18 128,18 Z" />
 
-    <!-- Left Bull Horn -->
+    <!-- 3. Primary Glowing Neon Cyan Outer Ring -->
     <path
-        android:fillColor="#00E5FF"
-        android:pathData="M46,54 C40,43 38,32 48,29 C52,28 52,34 49,42 C47,47 50,52 53,55 Z" />
-    <path
-        android:fillColor="#FFD700"
-        android:pathData="M48,29 C50,28 52,34 49,42 C48,38 48,33 48,29 Z" />
+        android:fillColor="#00000000"
+        android:strokeWidth="5"
+        android:pathData="M128,18 C188.75,18 238,67.25 238,128 C238,188.75 188.75,238 128,238 C67.25,238 18,188.75 18,128 C18,67.25 67.25,18 128,18 Z">
+        <aapt:attr name="android:strokeColor">
+            <gradient
+                android:startX="18"
+                android:startY="18"
+                android:endX="238"
+                android:endY="238"
+                android:type="linear">
+                <item android:color="#00FFFF" android:offset="0.0" />
+                <item android:color="#00B4D8" android:offset="0.5" />
+                <item android:color="#00FFFF" android:offset="1.0" />
+            </gradient>
+        </aapt:attr>
+    </path>
 
-    <!-- Right Bull Horn -->
+    <!-- 4. Inner Gold Accent Ring -->
     <path
-        android:fillColor="#00E5FF"
-        android:pathData="M82,54 C88,43 90,32 80,29 C76,28 76,34 79,42 C81,47 78,52 75,55 Z" />
-    <path
-        android:fillColor="#FFD700"
-        android:pathData="M80,29 C78,28 76,34 79,42 C80,38 80,33 80,29 Z" />
+        android:fillColor="#00000000"
+        android:strokeWidth="2.5"
+        android:pathData="M128,26 C184.34,26 230,71.66 230,128 C230,184.34 184.34,230 128,230 C71.66,230 26,184.34 26,128 C26,71.66 71.66,26 128,26 Z">
+        <aapt:attr name="android:strokeColor">
+            <gradient
+                android:startX="26"
+                android:startY="26"
+                android:endX="230"
+                android:endY="230"
+                android:type="linear">
+                <item android:color="#FFD166" android:offset="0.0" />
+                <item android:color="#E0A96D" android:offset="0.5" />
+                <item android:color="#FFC043" android:offset="1.0" />
+            </gradient>
+        </aapt:attr>
+    </path>
 
-    <!-- Cyber Bull Face Shield -->
+    <!-- 5. Background PCB Circuit Traces & Nodes (Left Side) -->
     <path
-        android:fillColor="#142845"
-        android:strokeColor="#FFD700"
+        android:fillColor="#00000000"
+        android:strokeColor="#00B4D8"
         android:strokeWidth="2"
-        android:pathData="M50,50 L78,50 L73,72 L64,88 L55,72 Z" />
-
-    <!-- Glowing Blue Cyber Eyes -->
-    <path
-        android:fillColor="#00FFFF"
-        android:pathData="M56,60 L61,60 L58,64 Z" />
-    <path
-        android:fillColor="#00FFFF"
-        android:pathData="M67,60 L72,60 L70,64 Z" />
-
-    <!-- Cyber Muzzle / Nose Plate -->
-    <path
-        android:fillColor="#FFC72C"
-        android:pathData="M59,75 L69,75 L67,81 L61,81 Z" />
+        android:pathData="M65,70 L48,70 L38,82 L38,102 M75,100 L52,100 L40,114 M80,128 L42,128 L30,140 M78,150 L56,150 L46,162 M90,165 L70,165 L58,178" />
     <path
         android:fillColor="#00000000"
+        android:strokeColor="#E0A96D"
+        android:strokeWidth="1.8"
+        android:pathData="M70,85 L56,85 L44,98 L44,120 M82,112 L60,112 L50,124 M72,138 L54,138 L42,150" />
+    <!-- Left Circuit Node Dots -->
+    <path android:fillColor="#00FFFF" android:pathData="M38,102 m-3,0 a3,3 0 1,0 6,0 a3,3 0 1,0 -6,0" />
+    <path android:fillColor="#FFD166" android:pathData="M40,114 m-3,0 a3,3 0 1,0 6,0 a3,3 0 1,0 -6,0" />
+    <path android:fillColor="#00FFFF" android:pathData="M30,140 m-3.5,0 a3.5,3.5 0 1,0 7,0 a3.5,3.5 0 1,0 -7,0" />
+    <path android:fillColor="#FFD166" android:pathData="M46,162 m-3,0 a3,3 0 1,0 6,0 a3,3 0 1,0 -6,0" />
+    <path android:fillColor="#00FFFF" android:pathData="M58,178 m-3,0 a3,3 0 1,0 6,0 a3,3 0 1,0 -6,0" />
+
+    <!-- 6. Background PCB Circuit Traces & Nodes (Right Side) -->
+    <path
+        android:fillColor="#00000000"
+        android:strokeColor="#00B4D8"
+        android:strokeWidth="2"
+        android:pathData="M191,70 L208,70 L218,82 L218,102 M181,100 L204,100 L216,114 M176,128 L214,128 L226,140 M178,150 L200,150 L210,162 M166,165 L186,165 L198,178" />
+    <path
+        android:fillColor="#00000000"
+        android:strokeColor="#E0A96D"
+        android:strokeWidth="1.8"
+        android:pathData="M186,85 L200,85 L212,98 L212,120 M174,112 L196,112 L206,124 M184,138 L202,138 L214,150" />
+    <!-- Right Circuit Node Dots -->
+    <path android:fillColor="#00FFFF" android:pathData="M218,102 m-3,0 a3,3 0 1,0 6,0 a3,3 0 1,0 -6,0" />
+    <path android:fillColor="#FFD166" android:pathData="M216,114 m-3,0 a3,3 0 1,0 6,0 a3,3 0 1,0 -6,0" />
+    <path android:fillColor="#00FFFF" android:pathData="M226,140 m-3.5,0 a3.5,3.5 0 1,0 7,0 a3.5,3.5 0 1,0 -7,0" />
+    <path android:fillColor="#FFD166" android:pathData="M210,162 m-3,0 a3,3 0 1,0 6,0 a3,3 0 1,0 -6,0" />
+    <path android:fillColor="#00FFFF" android:pathData="M198,178 m-3,0 a3,3 0 1,0 6,0 a3,3 0 1,0 -6,0" />
+
+    <!-- 7. Top AI Brain Neural Cortex (Centered between horns) -->
+    <!-- Brain Base Silhouette -->
+    <path
+        android:fillColor="#082A45"
         android:strokeColor="#00E5FF"
         android:strokeWidth="1.5"
-        android:pathData="M60,82 C60,86 68,86 68,82" />
-
-    <!-- Circuit tracks branching out -->
+        android:pathData="M128,42 C120,42 110,46 106,53 C102,60 104,68 107,74 C110,80 118,84 128,84 C138,84 146,80 149,74 C152,68 154,60 150,53 C146,46 136,42 128,42 Z" />
+    <!-- Brain Hemispheres & Fissures / Hex Lattice -->
     <path
         android:fillColor="#00000000"
-        android:strokeColor="#38BDF8"
-        android:strokeWidth="1.5"
-        android:pathData="M38,64 L26,64 L20,72 M90,64 L102,64 L108,72 M36,75 L28,81 M92,75 L100,81" />
-    <path
-        android:fillColor="#FFD700"
-        android:pathData="M20,72 m-2,0 a2,2 0 1,0 4,0 a2,2 0 1,0 -4,0" />
-    <path
-        android:fillColor="#FFD700"
-        android:pathData="M108,72 m-2,0 a2,2 0 1,0 4,0 a2,2 0 1,0 -4,0" />
-    <path
-        android:fillColor="#00E5FF"
-        android:pathData="M28,81 m-1.5,0 a1.5,1.5 0 1,0 3,0 a1.5,1.5 0 1,0 -3,0" />
-    <path
-        android:fillColor="#00E5FF"
-        android:pathData="M100,81 m-1.5,0 a1.5,1.5 0 1,0 3,0 a1.5,1.5 0 1,0 -3,0" />
+        android:strokeColor="#00FFFF"
+        android:strokeWidth="1.6"
+        android:pathData="M128,43 L128,83 M118,50 C114,54 114,60 119,63 C114,67 114,73 121,76 M138,50 C142,54 142,60 137,63 C142,67 142,73 135,76 M122,56 L128,59 L134,56 M122,70 L128,67 L134,70" />
+    <!-- Neural Glow Nodes inside Brain -->
+    <path android:fillColor="#00FFFF" android:pathData="M117,54 m-1.5,0 a1.5,1.5 0 1,0 3,0 a1.5,1.5 0 1,0 -3,0" />
+    <path android:fillColor="#00FFFF" android:pathData="M139,54 m-1.5,0 a1.5,1.5 0 1,0 3,0 a1.5,1.5 0 1,0 -3,0" />
+    <path android:fillColor="#FFD166" android:pathData="M128,51 m-1.5,0 a1.5,1.5 0 1,0 3,0 a1.5,1.5 0 1,0 -3,0" />
+    <path android:fillColor="#00FFFF" android:pathData="M116,71 m-1.5,0 a1.5,1.5 0 1,0 3,0 a1.5,1.5 0 1,0 -3,0" />
+    <path android:fillColor="#00FFFF" android:pathData="M140,71 m-1.5,0 a1.5,1.5 0 1,0 3,0 a1.5,1.5 0 1,0 -3,0" />
+    <path android:fillColor="#FFD166" android:pathData="M128,75 m-1.5,0 a1.5,1.5 0 1,0 3,0 a1.5,1.5 0 1,0 -3,0" />
 
-    <!-- Tech Banner Base -->
+    <!-- 8. Cybernetic Bull Horns (Left & Right) -->
+    <!-- Left Horn Outer Cyan Armor -->
     <path
-        android:fillColor="#00F0FF"
-        android:pathData="M44,98 L84,98 L80,101 L48,101 Z" />
+        android:fillColor="#0F3B59"
+        android:strokeColor="#00E5FF"
+        android:strokeWidth="2.5"
+        android:pathData="M98,102 C84,88 72,66 92,44 C100,34 102,46 95,64 C90,76 96,90 104,98 Z" />
+    <!-- Left Horn Gold Inner Core -->
+    <path
+        android:fillColor="#FFD166"
+        android:pathData="M92,44 C96,38 98,48 94,62 C90,72 94,84 99,92 C96,90 92,80 91,68 C90,56 90,48 92,44 Z" />
+
+    <!-- Right Horn Outer Cyan Armor -->
+    <path
+        android:fillColor="#0F3B59"
+        android:strokeColor="#00E5FF"
+        android:strokeWidth="2.5"
+        android:pathData="M158,102 C172,88 184,66 164,44 C156,34 154,46 161,64 C166,76 160,90 152,98 Z" />
+    <!-- Right Horn Gold Inner Core -->
+    <path
+        android:fillColor="#FFD166"
+        android:pathData="M164,44 C160,38 158,48 162,62 C166,72 162,84 157,92 C160,90 164,80 165,68 C166,56 166,48 164,44 Z" />
+
+    <!-- 9. Cyber Ears (Left & Right) -->
+    <!-- Left Ear -->
+    <path
+        android:fillColor="#0D2E47"
+        android:strokeColor="#E0A96D"
+        android:strokeWidth="1.8"
+        android:pathData="M92,106 L72,112 C70,116 78,124 88,122 L96,114 Z" />
+    <path android:fillColor="#00E5FF" android:pathData="M78,114 L88,118 L86,115 Z" />
+
+    <!-- Right Ear -->
+    <path
+        android:fillColor="#0D2E47"
+        android:strokeColor="#E0A96D"
+        android:strokeWidth="1.8"
+        android:pathData="M164,106 L184,112 C186,116 178,124 168,122 L160,114 Z" />
+    <path android:fillColor="#00E5FF" android:pathData="M178,114 L168,118 L170,115 Z" />
+
+    <!-- 10. Bull Cybernetic Face Armor & Structure -->
+    <!-- Face Main Mask Structure -->
+    <path
+        android:fillColor="#0B233A"
+        android:strokeColor="#00E5FF"
+        android:strokeWidth="2"
+        android:pathData="M102,96 L154,96 L148,138 L140,166 L128,176 L116,166 L108,138 Z" />
+
+    <!-- Gold Face Inset Frames & Plates -->
+    <path
+        android:fillColor="#00000000"
+        android:strokeColor="#FFD166"
+        android:strokeWidth="1.8"
+        android:pathData="M110,98 L128,114 L146,98 M128,114 L128,142 M114,122 L128,132 L142,122 M114,142 L128,152 L142,142" />
+
+    <!-- Glowing Blue Cyber Eyes (Intelligent, angled visor slits) -->
+    <path
+        android:fillColor="#00FFFF"
+        android:pathData="M110,120 L122,123 L118,128 L108,125 Z" />
+    <path
+        android:fillColor="#00FFFF"
+        android:pathData="M146,120 L134,123 L138,128 L148,125 Z" />
+
+    <!-- Eye Brow Accent Highlights -->
+    <path
+        android:fillColor="#FFD166"
+        android:pathData="M108,117 L124,121 L122,119 L109,116 Z" />
+    <path
+        android:fillColor="#FFD166"
+        android:pathData="M148,117 L132,121 L134,119 L147,116 Z" />
+
+    <!-- Cyber Muzzle / Snout Shield -->
+    <path
+        android:fillColor="#0E3654"
+        android:strokeColor="#00E5FF"
+        android:strokeWidth="2"
+        android:pathData="M116,146 L140,146 L142,164 L136,172 L120,172 L114,164 Z" />
+
+    <!-- Snout Nostril Apertures -->
+    <path
+        android:fillColor="#040D18"
+        android:strokeColor="#FFD166"
+        android:strokeWidth="1.5"
+        android:pathData="M120,154 C117,154 117,162 120,162 C123,162 123,154 120,154 Z" />
+    <path
+        android:fillColor="#040D18"
+        android:strokeColor="#FFD166"
+        android:strokeWidth="1.5"
+        android:pathData="M136,154 C133,154 133,162 136,162 C139,162 139,154 136,154 Z" />
+
+    <!-- Lower Jaw Cyber Conduits / Chin Armor -->
+    <path
+        android:fillColor="#07192A"
+        android:strokeColor="#00E5FF"
+        android:strokeWidth="1.6"
+        android:pathData="M120,172 L136,172 L132,184 L124,184 Z" />
+
+    <!-- Neck Ribbed Power Conduits (Streaming Downward) -->
+    <path
+        android:fillColor="#00000000"
+        android:strokeColor="#00B4D8"
+        android:strokeWidth="2"
+        android:pathData="M106,148 L96,172 L100,192 M150,148 L160,172 L156,192 M114,168 L110,192 M142,168 L146,192" />
+    <path
+        android:fillColor="#00000000"
+        android:strokeColor="#FFD166"
+        android:strokeWidth="1.8"
+        android:pathData="M102,160 L92,184 M154,160 L164,184 M122,176 L118,194 M134,176 L138,194" />
+
+    <!-- 11. NANDI AI Typography (Precision Vector Paths) -->
+    <!-- 'N' (First) -->
+    <path
+        android:fillColor="#FFFFFF"
+        android:pathData="M70,204 L77,204 L87,219 L87,204 L93,204 L93,226 L86,226 L76,211 L76,226 L70,226 Z" />
+    <!-- 'A' -->
+    <path
+        android:fillColor="#FFFFFF"
+        android:pathData="M100,204 L108,204 L117,226 L111,226 L109,221 L99,221 L97,226 L91,226 Z M100,217 L108,217 L104,208 Z" />
+    <!-- 'N' (Second) -->
+    <path
+        android:fillColor="#FFFFFF"
+        android:pathData="M120,204 L127,204 L137,219 L137,204 L143,204 L143,226 L136,226 L126,211 L126,226 L120,226 Z" />
+    <!-- 'D' -->
+    <path
+        android:fillColor="#FFFFFF"
+        android:pathData="M149,204 L161,204 C167,204 171,208 171,215 C171,222 167,226 161,226 L149,226 Z M155,209 L155,221 L160,221 C163,221 165,219 165,215 C165,211 163,209 160,209 Z" />
+    <!-- 'I' -->
+    <path
+        android:fillColor="#FFFFFF"
+        android:pathData="M178,204 L184,204 L184,226 L178,226 Z" />
+
+    <!-- Sub-banner: Horizontal Gold Flank Lines & 'AI' -->
+    <!-- Left Gold Accent Line -->
+    <path
+        android:fillColor="#FFD166"
+        android:pathData="M84,236 L112,236 L112,238 L84,238 Z" />
+
+    <!-- 'A' in AI -->
+    <path
+        android:fillColor="#00FFFF"
+        android:pathData="M120,232 L125,232 L129,242 L126,242 L125,239.5 L120,239.5 L119,242 L116,242 Z M121,237.5 L124.5,237.5 L122.5,233.5 Z" />
+    <!-- 'I' in AI -->
+    <path
+        android:fillColor="#00FFFF"
+        android:pathData="M133,232 L136,232 L136,242 L133,242 Z" />
+
+    <!-- Right Gold Accent Line -->
+    <path
+        android:fillColor="#FFD166"
+        android:pathData="M144,236 L172,236 L172,238 L144,238 Z" />
+
 </vector>

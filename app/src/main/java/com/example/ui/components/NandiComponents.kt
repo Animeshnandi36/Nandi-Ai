@@ -88,37 +88,18 @@ fun NandiLogo(
         horizontalArrangement = Arrangement.spacedBy(8.dp),
         modifier = modifier
     ) {
-        Box(
-            modifier = Modifier
-                .size(size)
-                .clip(CircleShape)
-                .background(
-                    Brush.radialGradient(
-                        colors = listOf(Color(0xFF0F2644), Color(0xFF070B14))
-                    )
-                )
-                .border(
-                    width = 1.5.dp,
-                    brush = Brush.linearGradient(
-                        colors = listOf(NeonCyan, CyberGold, NeonCyan)
-                    ),
-                    shape = CircleShape
-                ),
-            contentAlignment = Alignment.Center
-        ) {
-            Image(
-                painter = painterResource(id = R.drawable.ic_nandi_ai_emblem),
-                contentDescription = "NandiAi Logo Emblem",
-                modifier = Modifier.size(size * 0.85f)
-            )
-        }
+        Image(
+            painter = painterResource(id = R.drawable.ic_nandi_ai_emblem),
+            contentDescription = "NandiAi Official Logo Emblem",
+            modifier = Modifier.size(size)
+        )
 
         if (showText) {
             Column {
                 Row(verticalAlignment = Alignment.CenterVertically) {
                     Text(
                         text = "NANDI",
-                        fontSize = (size.value * 0.42f).sp,
+                        fontSize = (size.value * 0.42f).coerceAtLeast(14f).sp,
                         fontWeight = FontWeight.Black,
                         letterSpacing = 1.sp,
                         color = Color.White
@@ -126,7 +107,7 @@ fun NandiLogo(
                     Spacer(modifier = Modifier.width(3.dp))
                     Text(
                         text = "AI",
-                        fontSize = (size.value * 0.42f).sp,
+                        fontSize = (size.value * 0.42f).coerceAtLeast(14f).sp,
                         fontWeight = FontWeight.Black,
                         letterSpacing = 1.sp,
                         color = NeonCyan
