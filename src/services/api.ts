@@ -40,7 +40,7 @@ export async function checkHealth(): Promise<HealthResponse> {
       developer: 'Animesh Nandi',
       timestamp: new Date().toISOString(),
       providers: {
-        groq: { configured: false, chatModel: 'llama-3.3-70b-versatile', codeModel: 'llama-3.3-70b-versatile', status: 'offline' },
+        groq: { configured: false, chatModel: 'openai/gpt-oss-120b', codeModel: 'openai/gpt-oss-120b', status: 'offline' },
         huggingFace: { configured: false, imageModel: 'black-forest-labs/FLUX.1-schnell', status: 'offline' },
         search: { configured: true, status: 'ready' }
       }
@@ -50,7 +50,7 @@ export async function checkHealth(): Promise<HealthResponse> {
 
 export async function sendChatMessage(
   messages: { role: string; content: string }[],
-  model: string = 'llama-3.3-70b-versatile',
+  model: string = 'openai/gpt-oss-120b',
   systemPrompt?: string
 ): Promise<{ content: string; model: string; provider?: string }> {
   try {

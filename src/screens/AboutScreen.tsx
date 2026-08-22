@@ -18,7 +18,7 @@ export const AboutScreen: React.FC = () => {
   const features = [
     {
       title: 'Groq LPU Accelerated Chat',
-      desc: 'Lightning-fast token generation using Llama 3.3 70B and DeepSeek R1 models with sub-second latency.',
+      desc: 'Lightning-fast token generation using OpenAI GPT-OSS 120B, Llama 3.3 70B, and DeepSeek R1 models with sub-second latency.',
       icon: Zap
     },
     {

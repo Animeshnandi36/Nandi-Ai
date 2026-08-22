@@ -64,9 +64,9 @@ fun NandiNavHost(
     val imageViewModel: ImageViewModel = viewModel()
     val chartViewModel: ChartViewModel = viewModel()
 
-    val showBottomNav = currentRoute in listOf(
+    val isChatRoute = currentRoute == Screen.Chat.route || currentRoute?.startsWith("chat") == true
+    val showBottomNav = isChatRoute || currentRoute in listOf(
         Screen.Home.route,
-        Screen.Chat.route,
         Screen.ImageStudio.route,
         Screen.ChartStudio.route,
         Screen.CodeStudio.route
@@ -85,11 +85,12 @@ fun NandiNavHost(
                         modifier = Modifier.height(58.dp)
                     ) {
                         bottomNavScreens.forEach { screen ->
-                            val isSelected = currentRoute == screen.route
+                            val isSelected = if (screen == Screen.Chat) isChatRoute else currentRoute == screen.route
                             NavigationBarItem(
                                 selected = isSelected,
                                 onClick = {
-                                    navController.navigate(screen.route) {
+                                    val targetRoute = if (screen == Screen.Chat) "chat" else screen.route
+                                    navController.navigate(targetRoute) {
                                         popUpTo(navController.graph.findStartDestination().id) {
                                             saveState = true
                                         }
@@ -133,8 +134,12 @@ fun NandiNavHost(
             composable(Screen.Home.route) {
                 HomeScreen(
                     onNavigateToChat = { sessionId ->
-                        sessionId?.let { chatViewModel.selectSession(it) }
-                        navController.navigate(Screen.Chat.route)
+                        if (sessionId != null) {
+                            chatViewModel.selectSession(sessionId)
+                            navController.navigate(Screen.Chat.createRoute(sessionId))
+                        } else {
+                            navController.navigate("chat")
+                        }
                     },
                     onNavigateToImageStudio = { navController.navigate(Screen.ImageStudio.route) },
                     onNavigateToChartStudio = { navController.navigate(Screen.ChartStudio.route) },
@@ -155,7 +160,7 @@ fun NandiNavHost(
                 })
             ) { backStackEntry ->
                 val sessionId = backStackEntry.arguments?.getString("sessionId")
-                if (sessionId != null) {
+                if (sessionId != null && sessionId.isNotBlank() && sessionId != "{sessionId}") {
                     chatViewModel.selectSession(sessionId)
                 }
                 ChatScreen(viewModel = chatViewModel)
@@ -181,7 +186,7 @@ fun NandiNavHost(
                 ProjectsScreen(
                     onOpenProjectChat = { projectName ->
                         chatViewModel.createNewSession()
-                        navController.navigate(Screen.Chat.route)
+                        navController.navigate("chat")
                     }
                 )
             }
@@ -190,11 +195,11 @@ fun NandiNavHost(
                 HistoryScreen(
                     onSelectSession = { sessionId ->
                         chatViewModel.selectSession(sessionId)
-                        navController.navigate(Screen.Chat.route)
+                        navController.navigate(Screen.Chat.createRoute(sessionId))
                     },
                     onNewChat = {
                         chatViewModel.createNewSession()
-                        navController.navigate(Screen.Chat.route)
+                        navController.navigate("chat")
                     }
                 )
             }
