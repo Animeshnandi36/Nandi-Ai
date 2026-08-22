@@ -71,7 +71,7 @@ export const AboutScreen: React.FC = () => {
   ];
 
   return (
-    <div className="flex-1 overflow-y-auto bg-[#060A12] p-4 md:p-6 max-w-4xl mx-auto w-full space-y-6">
+    <div className="flex-1 overflow-y-auto bg-[#060A12] p-4 md:p-6 pb-24 md:pb-6 max-w-4xl mx-auto w-full space-y-6">
       {/* Hero Banner */}
       <div className="relative overflow-hidden rounded-2xl bg-gradient-to-br from-[#0A1324] via-[#0E1A33] to-[#080E1C] border border-[#1E2F4D] p-6 md:p-8 shadow-xl">
         <div className="relative z-10 flex flex-col md:flex-row items-center gap-6 text-center md:text-left">

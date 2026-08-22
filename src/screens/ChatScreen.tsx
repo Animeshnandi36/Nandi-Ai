@@ -430,7 +430,7 @@ export const ChatScreen: React.FC<ChatScreenProps> = ({
       </div>
 
       {/* Input Bar & Controls */}
-      <div className="p-3 md:p-4 bg-[#080E1A] border-t border-[#1E2F4D]">
+      <div className="p-3 md:p-4 pb-20 md:pb-4 bg-[#080E1A] border-t border-[#1E2F4D]">
         <div className="max-w-4xl mx-auto space-y-2">
           {/* Active Attachments Previews */}
           {(imagePreview || fileAttachment) && (

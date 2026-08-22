@@ -29,6 +29,7 @@ export const Header: React.FC<HeaderProps> = ({
 
   const getTitle = () => {
     switch (currentTab) {
+      case 'home': return 'Home Workspace';
       case 'chat': return 'Neural Chat Studio';
       case 'image': return 'FLUX.1 Image Studio';
       case 'chart': return 'Interactive Chart Studio';

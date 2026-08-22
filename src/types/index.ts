@@ -1,4 +1,5 @@
 export type AppTab =
+  | 'home'
   | 'chat'
   | 'image'
   | 'chart'

@@ -3,6 +3,8 @@ import { AppTab, Conversation, AppSettings } from './types';
 import { Header } from './components/Header';
 import { Sidebar } from './components/Sidebar';
 import { Footer } from './components/Footer';
+import { BottomNavBar } from './components/BottomNavBar';
+import { HomeScreen } from './screens/HomeScreen';
 import { ChatScreen } from './screens/ChatScreen';
 import { ImageStudioScreen } from './screens/ImageStudioScreen';
 import { ChartStudioScreen } from './screens/ChartStudioScreen';
@@ -24,7 +26,7 @@ const DEFAULT_SETTINGS: AppSettings = {
 };
 
 export const App: React.FC = () => {
-  const [currentTab, setCurrentTab] = useState<AppTab>('chat');
+  const [currentTab, setCurrentTab] = useState<AppTab>('home');
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [conversations, setConversations] = useState<Conversation[]>([]);
   const [activeConversationId, setActiveConversationId] = useState<string | null>(null);
@@ -138,7 +140,7 @@ export const App: React.FC = () => {
       />
 
       {/* Main Content Area */}
-      <div className="flex-1 flex flex-col h-full min-w-0 overflow-hidden">
+      <div className="flex-1 flex flex-col h-full min-w-0 overflow-hidden relative">
         <Header
           currentTab={currentTab}
           onOpenSidebar={() => setSidebarOpen(true)}
@@ -148,6 +150,19 @@ export const App: React.FC = () => {
         />
 
         <main className="flex-1 flex flex-col overflow-hidden relative">
+          {currentTab === 'home' && (
+            <HomeScreen
+              onSelectTab={setCurrentTab}
+              onOpenConversation={(id) => {
+                setActiveConversationId(id);
+                setCurrentTab('chat');
+              }}
+              onNewChat={handleCreateNewChat}
+              conversations={conversations}
+              serverOnline={serverOnline}
+            />
+          )}
+
           {currentTab === 'chat' && (
             <ChatScreen
               activeConversation={activeConversation}
@@ -199,6 +214,13 @@ export const App: React.FC = () => {
         </main>
 
         <Footer />
+
+        {/* Mobile Bottom Navigation Bar matching Android Bar */}
+        <BottomNavBar
+          currentTab={currentTab}
+          onSelectTab={setCurrentTab}
+          onOpenSidebar={() => setSidebarOpen(true)}
+        />
       </div>
     </div>
   );

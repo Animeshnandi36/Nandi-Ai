@@ -88,7 +88,7 @@ export const ChartStudioScreen: React.FC = () => {
   const maxVal = Math.max(...(currentChart.data?.map((d) => Math.max(d.value, d.secondary || 0)) || [100]), 1);
 
   return (
-    <div className="flex-1 overflow-y-auto bg-[#060A12] p-4 md:p-6 max-w-5xl mx-auto w-full space-y-6">
+    <div className="flex-1 overflow-y-auto bg-[#060A12] p-4 md:p-6 pb-24 md:pb-6 max-w-5xl mx-auto w-full space-y-6">
       {/* Top Banner */}
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 p-5 rounded-2xl bg-gradient-to-r from-[#0B1424] via-[#0E1A33] to-[#0B1424] border border-[#1E2F4D] shadow-lg">
         <div className="flex items-center gap-3.5">

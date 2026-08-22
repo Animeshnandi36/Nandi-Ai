@@ -1,5 +1,6 @@
 import React from 'react';
 import {
+  Home,
   MessageSquare,
   Sparkles,
   BarChart3,
@@ -41,6 +42,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
   onDeleteConversation
 }) => {
   const navItems = [
+    { id: 'home', label: 'Home Dashboard', icon: Home },
     { id: 'chat', label: 'AI Chat', icon: MessageSquare, badge: 'Groq LPU' },
     { id: 'image', label: 'Image Studio', icon: Sparkles, badge: 'FLUX.1' },
     { id: 'chart', label: 'Chart Studio', icon: BarChart3 },
