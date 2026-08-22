@@ -28,8 +28,8 @@ const upload = multer({
 // Environment config helpers (Keys are kept strictly server-side)
 const getGroqKey = () => (process.env.GROQ_API_KEY || '').trim();
 const getHfToken = () => (process.env.HF_API_TOKEN || '').trim();
-const getDefaultChatModel = () => process.env.GROQ_CHAT_MODEL || 'llama-3.3-70b-versatile';
-const getDefaultCodeModel = () => process.env.GROQ_CODE_MODEL || 'llama-3.3-70b-versatile';
+const getDefaultChatModel = () => process.env.GROQ_CHAT_MODEL || 'openai/gpt-oss-120b';
+const getDefaultCodeModel = () => process.env.GROQ_CODE_MODEL || 'openai/gpt-oss-120b';
 const getDefaultImageModel = () => process.env.HF_IMAGE_MODEL || 'black-forest-labs/FLUX.1-schnell';
 
 // Health & System Status Endpoint
@@ -248,7 +248,7 @@ The response MUST BE strictly valid JSON matching this schema:
             'Authorization': `Bearer ${apiKey}`
           },
           body: JSON.stringify({
-            model: 'llama-3.3-70b-versatile',
+            model: getDefaultChatModel(),
             messages: [
               { role: 'system', content: 'You are NandiAi Chart Studio Engine. Respond ONLY with valid JSON conforming to the requested schema.' },
               { role: 'user', content: schemaInstruction }
@@ -383,7 +383,7 @@ app.post('/api/analyze-file', upload.single('file'), async (req, res) => {
             'Authorization': `Bearer ${apiKey}`
           },
           body: JSON.stringify({
-            model: 'llama-3.3-70b-versatile',
+            model: getDefaultChatModel(),
             messages: [
               {
                 role: 'system',

@@ -19,6 +19,7 @@ export const Header: React.FC<HeaderProps> = ({
   serverOnline = true
 }) => {
   const models = [
+    { id: 'openai/gpt-oss-120b', label: 'OpenAI GPT-OSS 120B' },
     { id: 'llama-3.3-70b-versatile', label: 'Llama 3.3 70B (Groq)' },
     { id: 'deepseek-r1-distill-llama-70b', label: 'DeepSeek R1 70B (Reasoning)' },
     { id: 'llama-3.1-8b-instant', label: 'Llama 3.1 8B (Instant)' },

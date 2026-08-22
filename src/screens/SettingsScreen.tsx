@@ -128,6 +128,7 @@ export const SettingsScreen: React.FC<SettingsScreenProps> = ({
 
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
           {[
+            { id: 'openai/gpt-oss-120b', name: 'OpenAI GPT-OSS 120B', desc: 'OpenAI open-weight 120B high-capacity frontier reasoning' },
             { id: 'llama-3.3-70b-versatile', name: 'Llama 3.3 70B Versatile', desc: 'Ultra-fast Groq LPU general reasoning' },
             { id: 'deepseek-r1-distill-llama-70b', name: 'DeepSeek R1 Distill 70B', desc: 'Deep mathematical & logic reasoning' },
             { id: 'llama-3.1-8b-instant', name: 'Llama 3.1 8B Instant', desc: 'Sub-100ms ultra low-latency token streaming' },

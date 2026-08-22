@@ -48,7 +48,7 @@ class AiRepository {
             ProviderStatus(
                 type = AiProviderType.GROQ,
                 isConfigured = groqReady,
-                defaultModel = "llama-3.3-70b-versatile",
+                defaultModel = "openai/gpt-oss-120b",
                 statusMessage = if (groqReady) "Connected · LPU Ultra Low Latency" else "Configured via AI Studio Secrets (GROQ_API_KEY)"
             ),
             ProviderStatus(
@@ -68,7 +68,7 @@ class AiRepository {
 
     suspend fun generateChatResponse(
         messages: List<Pair<String, String>>, // (role, text)
-        model: String = "llama-3.3-70b-versatile",
+        model: String = "openai/gpt-oss-120b",
         imageBitmap: Bitmap? = null
     ): String = withContext(Dispatchers.IO) {
         val groqKey = try { BuildConfig.GROQ_API_KEY } catch (e: Exception) { "" }
@@ -95,11 +95,13 @@ class AiRepository {
 
                 // Choose valid Groq model
                 val validModel = when {
+                    model.contains("gpt-oss", ignoreCase = true) || model.contains("120b", ignoreCase = true) -> "openai/gpt-oss-120b"
                     model.contains("deepseek", ignoreCase = true) -> "deepseek-r1-distill-llama-70b"
                     model.contains("8b", ignoreCase = true) -> "llama-3.1-8b-instant"
                     model.contains("mixtral", ignoreCase = true) -> "mixtral-8x7b-32768"
                     model.contains("gemma", ignoreCase = true) -> "gemma2-9b-it"
-                    else -> "llama-3.3-70b-versatile"
+                    model.contains("llama", ignoreCase = true) -> "llama-3.3-70b-versatile"
+                    else -> "openai/gpt-oss-120b"
                 }
 
                 val request = GroqChatRequest(

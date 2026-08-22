@@ -21,12 +21,13 @@ import kotlinx.coroutines.launch
 data class ChatUiState(
     val currentSessionId: String = "",
     val availableModels: List<String> = listOf(
+        "openai/gpt-oss-120b",
         "llama-3.3-70b-versatile",
         "deepseek-r1-distill-llama-70b",
         "llama-3.1-8b-instant",
         "mixtral-8x7b-32768"
     ),
-    val selectedModel: String = "llama-3.3-70b-versatile",
+    val selectedModel: String = "openai/gpt-oss-120b",
     val isGenerating: Boolean = false,
     val errorMessage: String? = null,
     val inputText: String = ""

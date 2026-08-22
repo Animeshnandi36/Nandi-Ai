@@ -15,7 +15,7 @@ import { AboutScreen } from './screens/AboutScreen';
 import { checkHealth } from './services/api';
 
 const DEFAULT_SETTINGS: AppSettings = {
-  defaultModel: 'llama-3.3-70b-versatile',
+  defaultModel: 'openai/gpt-oss-120b',
   theme: 'cyber',
   voiceSpeed: 1.0,
   autoSpeak: false,

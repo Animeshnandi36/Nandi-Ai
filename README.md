@@ -7,7 +7,7 @@
 
 ## 🌟 Core Features
 
-- 🤖 **Neural AI Chat**: Powered by Groq LPU with ultra-fast token streaming (`llama-3.3-70b-versatile`, `deepseek-r1-distill-llama-70b`, `llama-3.1-8b-instant`, `mixtral-8x7b-32768`, `gemma2-9b-it`).
+- 🤖 **Neural AI Chat**: Powered by Groq LPU with ultra-fast token streaming (`openai/gpt-oss-120b`, `llama-3.3-70b-versatile`, `deepseek-r1-distill-llama-70b`, `llama-3.1-8b-instant`, `mixtral-8x7b-32768`, `gemma2-9b-it`).
 - 🖼️ **FLUX.1 Image Studio**: Powered by Hugging Face FLUX.1 neural diffusion with customizable styles (Cyberpunk, 8K Photorealistic, 3D Octane, Anime, Vector Art) and aspect ratios.
 - 📊 **Interactive Chart Studio**: Natural language to interactive structured charts (Bar, Line, Area, Pie, Scatter) with live data table view and CSV export.
 - 💻 **Multi-Language Code Studio**: High-speed code synthesis and debugging across Kotlin, Python, TypeScript, Java, C++, SQL, HTML/CSS, Rust, and Bash.
@@ -53,8 +53,8 @@ cp .env.example .env
 Fill in your API keys:
 ```env
 GROQ_API_KEY=your_groq_api_key_here
-GROQ_CHAT_MODEL=llama-3.3-70b-versatile
-GROQ_CODE_MODEL=llama-3.3-70b-versatile
+GROQ_CHAT_MODEL=openai/gpt-oss-120b
+GROQ_CODE_MODEL=openai/gpt-oss-120b
 HF_API_TOKEN=your_huggingface_token_here
 HF_IMAGE_MODEL=black-forest-labs/FLUX.1-schnell
 PORT=3000
