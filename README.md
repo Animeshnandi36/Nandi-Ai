@@ -111,21 +111,28 @@ Add the following in Render's **Environment** tab:
 
 The Android project is built with Kotlin, Jetpack Compose, Room local database, and Retrofit.
 
-### 1. Build Debug APK
+### 1. Automated APK Build via GitHub Actions (Recommended)
+This repository includes an automated GitHub Actions workflow (`.github/workflows/build-apk.yml`).
+Whenever you push code or trigger the workflow:
+1. Go to your GitHub repository and click the **Actions** tab.
+2. Select **Build Android APK** ➔ click **Run workflow**.
+3. Once finished, download the compiled `.apk` file directly under the **Artifacts** section!
+
+### 2. Build Debug APK Locally
 ```bash
 ./gradlew assembleDebug
 ```
 The generated APK will be located at:
 `app/build/outputs/apk/debug/app-debug.apk`
 
-### 2. Build Release APK
+### 3. Build Release APK Locally
 ```bash
 ./gradlew assembleRelease
 ```
 The generated APK will be located at:
 `app/build/outputs/apk/release/app-release.apk`
 
-### 3. Run Unit & Screenshot Tests
+### 4. Run Unit & Screenshot Tests
 ```bash
 ./gradlew :app:testDebugUnitTest
 ```
