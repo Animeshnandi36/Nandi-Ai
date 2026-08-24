@@ -45,7 +45,7 @@ data class ProjectEntity(
 data class GeneratedImageEntity(
     @PrimaryKey(autoGenerate = true) val id: Long = 0,
     val prompt: String,
-    val modelUsed: String = "FLUX.1-schnell",
+    val modelUsed: String = "black-forest-labs/FLUX.1-dev",
     val imageBase64OrUrl: String,
     val timestamp: Long = System.currentTimeMillis(),
     val aspectRatio: String = "1:1",

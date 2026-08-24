@@ -41,7 +41,7 @@ export async function checkHealth(): Promise<HealthResponse> {
       timestamp: new Date().toISOString(),
       providers: {
         groq: { configured: false, chatModel: 'openai/gpt-oss-120b', codeModel: 'openai/gpt-oss-120b', status: 'offline' },
-        huggingFace: { configured: false, imageModel: 'black-forest-labs/FLUX.1-schnell', status: 'offline' },
+        huggingFace: { configured: false, imageModel: 'black-forest-labs/FLUX.1-dev', status: 'offline' },
         search: { configured: true, status: 'ready' }
       }
     };

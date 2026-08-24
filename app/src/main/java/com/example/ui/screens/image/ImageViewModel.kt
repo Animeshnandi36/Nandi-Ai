@@ -64,9 +64,9 @@ class ImageViewModel(application: Application) : AndroidViewModel(application) {
 
         val hfModel = try {
             val m = BuildConfig.HF_IMAGE_MODEL
-            if (m.isNotBlank()) m else "black-forest-labs/FLUX.1-schnell"
+            if (m.isNotBlank()) m else "black-forest-labs/FLUX.1-dev"
         } catch (e: Exception) {
-            "black-forest-labs/FLUX.1-schnell"
+            "black-forest-labs/FLUX.1-dev"
         }
 
         val enhancedPrompt = "$rawPrompt, ${_uiState.value.selectedStyle} style, 8k resolution, photorealistic, intricate cyber details, volumetric lighting"
@@ -74,7 +74,7 @@ class ImageViewModel(application: Application) : AndroidViewModel(application) {
         viewModelScope.launch {
             _uiState.value = _uiState.value.copy(
                 isGenerating = true,
-                generationStep = "Initializing Hugging Face FLUX.1 neural pipeline...",
+                generationStep = "Initializing Hugging Face FLUX.1-dev neural pipeline...",
                 errorMessage = null
             )
 

@@ -54,7 +54,7 @@ class AiRepository {
             ProviderStatus(
                 type = AiProviderType.HUGGING_FACE,
                 isConfigured = hfReady,
-                defaultModel = "black-forest-labs/FLUX.1-schnell",
+                defaultModel = "black-forest-labs/FLUX.1-dev",
                 statusMessage = if (hfReady) "Connected · Neural Diffusion Pipeline" else "Configured via AI Studio Secrets (HF_API_TOKEN)"
             ),
             ProviderStatus(
@@ -176,7 +176,7 @@ class AiRepository {
 
     suspend fun generateImageWithHuggingFace(
         prompt: String,
-        model: String = "black-forest-labs/FLUX.1-schnell"
+        model: String = "black-forest-labs/FLUX.1-dev"
     ): ByteArray? = withContext(Dispatchers.IO) {
         val hfToken = try { BuildConfig.HF_API_TOKEN } catch (e: Exception) { "" }
         if (hfToken.isBlank() || hfToken == "MY_HF_API_TOKEN") return@withContext null
@@ -335,7 +335,7 @@ class AiRepository {
             lower.contains("ai") || lower.contains("model") || lower.contains("market") -> listOf(
                 ChartDataItem("Llama 3.3 70B", 96f),
                 ChartDataItem("DeepSeek R1", 94f),
-                ChartDataItem("FLUX.1 Schnell", 92f),
+                ChartDataItem("FLUX.1 Dev", 92f),
                 ChartDataItem("Llama 3.1 8B", 89f)
             )
             else -> listOf(
@@ -436,7 +436,7 @@ export async function queryGroqLpu(prompt: string): Promise<string> {
                 "### ⚡ Meet NandiAi\n\nI am **NandiAi**, an intelligent full-stack AI workspace developed by **Animesh Nandi**.\n\n" +
                         "**Capabilities:**\n" +
                         "- 🤖 **Next-Gen AI Chat**: Powered by **Groq LPU** (`llama-3.3-70b-versatile`, `deepseek-r1-distill-llama-70b`)\n" +
-                        "- 🖼️ **Image Studio**: Powered by **Hugging Face** (`FLUX.1-schnell` neural diffusion)\n" +
+                        "- 🖼️ **Image Studio**: Powered by **Hugging Face** (`FLUX.1-dev` neural diffusion)\n" +
                         "- 📊 **Chart Studio**: Instant interactive data visualizations via structured Groq JSON\n" +
                         "- 📎 **File & Document Intelligence**: Deep file analysis & Q&A via Groq\n" +
                         "- 💻 **Code Studio**: Multi-language code generation and debugging\n\n" +

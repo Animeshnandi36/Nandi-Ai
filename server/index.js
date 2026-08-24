@@ -4,6 +4,7 @@ import dotenv from 'dotenv';
 import path from 'path';
 import { fileURLToPath } from 'url';
 import multer from 'multer';
+import { InferenceClient } from '@huggingface/inference';
 
 // Load environment variables from .env if present
 dotenv.config();
@@ -25,12 +26,15 @@ const upload = multer({
   limits: { fileSize: 25 * 1024 * 1024 } // 25MB max
 });
 
+// Single canonical Hugging Face image model
+const HF_CANONICAL_IMAGE_MODEL = 'black-forest-labs/FLUX.1-dev';
+
 // Environment config helpers (Keys are kept strictly server-side)
 const getGroqKey = () => (process.env.GROQ_API_KEY || '').trim();
 const getHfToken = () => (process.env.HF_API_TOKEN || '').trim();
 const getDefaultChatModel = () => process.env.GROQ_CHAT_MODEL || 'openai/gpt-oss-120b';
 const getDefaultCodeModel = () => process.env.GROQ_CODE_MODEL || 'openai/gpt-oss-120b';
-const getDefaultImageModel = () => process.env.HF_IMAGE_MODEL || 'black-forest-labs/FLUX.1-schnell';
+const getDefaultImageModel = () => HF_CANONICAL_IMAGE_MODEL;
 
 // Health & System Status Endpoint
 app.get('/api/health', (req, res) => {
@@ -145,10 +149,10 @@ app.post('/api/chat', async (req, res) => {
   }
 });
 
-// 2. Image Generation Endpoint (Hugging Face FLUX.1)
+// 2. Image Generation Endpoint (Hugging Face black-forest-labs/FLUX.1-dev via Inference Providers)
 app.post('/api/generate-image', async (req, res) => {
   try {
-    const { prompt, model = getDefaultImageModel(), style = 'cyberpunk', aspectRatio = '1:1' } = req.body;
+    const { prompt, style = 'cyberpunk', aspectRatio = '1:1' } = req.body;
 
     if (!prompt || typeof prompt !== 'string') {
       return res.status(400).json({ error: 'Prompt is required.' });
@@ -160,49 +164,42 @@ app.post('/api/generate-image', async (req, res) => {
 
     if (isTokenValid) {
       try {
-        const hfModel = model || getDefaultImageModel();
-        const response = await fetch(`https://api-inference.huggingface.co/models/${encodeURIComponent(hfModel)}`, {
-          method: 'POST',
-          headers: {
-            'Authorization': `Bearer ${token}`,
-            'Content-Type': 'application/json'
-          },
-          body: JSON.stringify({ inputs: enhancedPrompt })
+        // Modern Hugging Face Inference Providers API using InferenceClient
+        const client = new InferenceClient(token);
+        const imageBlob = await client.textToImage({
+          model: HF_CANONICAL_IMAGE_MODEL,
+          inputs: enhancedPrompt
         });
 
-        if (response.ok) {
-          const arrayBuffer = await response.arrayBuffer();
+        if (imageBlob) {
+          const arrayBuffer = await imageBlob.arrayBuffer();
           const base64 = Buffer.from(arrayBuffer).toString('base64');
-          const mimeType = response.headers.get('content-type') || 'image/jpeg';
+          const mimeType = imageBlob.type || 'image/jpeg';
           const dataUrl = `data:${mimeType};base64,${base64}`;
 
           return res.json({
             imageUrl: dataUrl,
             prompt: enhancedPrompt,
-            model: hfModel,
+            model: HF_CANONICAL_IMAGE_MODEL,
             aspectRatio,
             provider: 'huggingface'
           });
-        } else {
-          const errStatus = response.status;
-          const errBody = await response.text();
-          console.warn(`Hugging Face API returned ${errStatus}:`, errBody);
         }
       } catch (hfErr) {
-        console.warn('Hugging Face fetch error:', hfErr.message);
+        console.warn('Hugging Face Inference Providers error:', hfErr.message);
       }
     }
 
-    // High-resolution SVG placeholder generator fallback if API token not set
+    // High-resolution SVG placeholder generator fallback if API token not set or during model warming
     const fallbackDataUrl = generateCyberSvgImage(prompt, enhancedPrompt, style, aspectRatio);
     return res.json({
       imageUrl: fallbackDataUrl,
       prompt: enhancedPrompt,
-      model: model || 'nandi-neural-diffusion-preview',
+      model: HF_CANONICAL_IMAGE_MODEL,
       aspectRatio,
       provider: 'nandi-studio',
       fallback: true,
-      notice: isTokenValid ? 'Upstream model warming up. Generated preview.' : 'Hugging Face API token can be configured in Render/Secrets (HF_API_TOKEN).'
+      notice: isTokenValid ? 'Upstream FLUX.1-dev provider warming up. Generated preview.' : 'Hugging Face API token can be configured in Render/Secrets (HF_API_TOKEN).'
     });
   } catch (err) {
     console.error('Image generation error:', err);
@@ -541,7 +538,7 @@ function createFallbackChart(prompt, type = 'bar') {
     data = [
       { label: 'Llama 3.3 70B', value: 98, secondary: 92 },
       { label: 'DeepSeek R1', value: 95, secondary: 90 },
-      { label: 'FLUX.1 Schnell', value: 92, secondary: 88 },
+      { label: 'FLUX.1 Dev', value: 92, secondary: 88 },
       { label: 'Mixtral 8x7B', value: 89, secondary: 84 },
       { label: 'Gemma 2 9B', value: 86, secondary: 81 }
     ];
@@ -668,9 +665,9 @@ void executeNandiAiTask() {
 function generateFallbackChatReply(prompt) {
   const p = prompt.toLowerCase();
   if (p.includes('who are you') || p.includes('who made you') || p.includes('developer') || p.includes('creator')) {
-    return `### ⚡ Meet NandiAi\n\nI am **NandiAi**, an intelligent full-stack AI workspace developed by **Animesh Nandi**.\n\n**Core Capabilities:**\n- 🤖 **Next-Gen AI Chat**: Powered by **Groq LPU** (\`llama-3.3-70b-versatile\`, \`deepseek-r1-distill-llama-70b\`)\n- 🖼️ **Image Studio**: Powered by **Hugging Face** (\`FLUX.1-schnell\` neural diffusion)\n- 📊 **Chart Studio**: Instant visual charts from natural language queries\n- 💻 **Code Studio**: Multi-language generation & debugging\n- 📎 **Document Intelligence**: Deep semantic file analysis & Q&A\n\n© 2026 NandiAi · Developed by Animesh Nandi`;
+    return `### ⚡ Meet NandiAi\n\nI am **NandiAi**, an intelligent full-stack AI workspace developed by **Animesh Nandi**.\n\n**Core Capabilities:**\n- 🤖 **Next-Gen AI Chat**: Powered by **Groq LPU** (\`llama-3.3-70b-versatile\`, \`deepseek-r1-distill-llama-70b\`)\n- 🖼️ **Image Studio**: Powered by **Hugging Face** (\`FLUX.1-dev\` neural diffusion)\n- 📊 **Chart Studio**: Instant visual charts from natural language queries\n- 💻 **Code Studio**: Multi-language generation & debugging\n- 📎 **Document Intelligence**: Deep semantic file analysis & Q&A\n\n© 2026 NandiAi · Developed by Animesh Nandi`;
   }
-  return `### ⚡ NandiAi Response\n\nRegarding **"${prompt}"**:\n\n1. **Core Insight**: NandiAi processes your queries using optimized Groq LPU inference pipelines, delivering sub-second token latency and precise answers.\n2. **Multi-Model Intelligence**: You can attach documents for Groq analysis, generate charts, synthesize companion images via Hugging Face FLUX.1, or write production code directly within this workspace.\n\n*Configure \`GROQ_API_KEY\` in your Render environment variables to activate live Groq LPU models.*`;
+  return `### ⚡ NandiAi Response\n\nRegarding **"${prompt}"**:\n\n1. **Core Insight**: NandiAi processes your queries using optimized Groq LPU inference pipelines, delivering sub-second token latency and precise answers.\n2. **Multi-Model Intelligence**: You can attach documents for Groq analysis, generate charts, synthesize companion images via Hugging Face FLUX.1-dev, or write production code directly within this workspace.\n\n*Configure \`GROQ_API_KEY\` in your Render environment variables to activate live Groq LPU models.*`;
 }
 
 // Serve production static assets from 'dist'

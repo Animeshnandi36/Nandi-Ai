@@ -85,7 +85,7 @@ class AppRepository(private val database: AppDatabase) {
     // Images
     val allImages: Flow<List<GeneratedImageEntity>> = imageDao.getAllImages()
 
-    suspend fun saveGeneratedImage(prompt: String, base64OrUrl: String, model: String = "FLUX.1-schnell", ratio: String = "1:1"): Long {
+    suspend fun saveGeneratedImage(prompt: String, base64OrUrl: String, model: String = "black-forest-labs/FLUX.1-dev", ratio: String = "1:1"): Long {
         return imageDao.insertImage(
             GeneratedImageEntity(
                 prompt = prompt,

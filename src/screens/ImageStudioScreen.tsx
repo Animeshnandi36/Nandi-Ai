@@ -75,7 +75,7 @@ export const ImageStudioScreen: React.FC = () => {
         id: `img-${Date.now()}`,
         prompt: result.prompt || textToGen,
         imageUrl: result.imageUrl,
-        model: result.model || 'FLUX.1-schnell',
+        model: result.model || 'black-forest-labs/FLUX.1-dev',
         aspectRatio,
         style,
         timestamp: Date.now()
@@ -131,17 +131,17 @@ export const ImageStudioScreen: React.FC = () => {
           </div>
           <div>
             <h2 className="text-xl font-black text-white tracking-wide">
-              FLUX.1 <span className="text-[#00F0FF]">Image Studio</span>
+              FLUX.1-dev <span className="text-[#00F0FF]">Image Studio</span>
             </h2>
             <p className="text-xs text-slate-400">
-              High-fidelity neural diffusion powered by Hugging Face Inference API
+              High-fidelity neural diffusion powered by Hugging Face Inference Providers
             </p>
           </div>
         </div>
 
         <div className="flex items-center gap-2">
           <span className="px-3 py-1 rounded-full bg-[#101F38] text-[11px] font-semibold text-[#00F0FF] border border-[#00F0FF]/30">
-            Engine: FLUX.1-schnell
+            Engine: black-forest-labs/FLUX.1-dev
           </span>
         </div>
       </div>
@@ -275,7 +275,7 @@ export const ImageStudioScreen: React.FC = () => {
                 Synthesizing Neural Diffusion Latents...
               </h3>
               <p className="text-xs text-slate-400">
-                Passing prompt through Hugging Face FLUX.1 neural network
+                Passing prompt through Hugging Face FLUX.1-dev neural network
               </p>
             </div>
             <div className="w-48 h-1.5 bg-[#101F38] rounded-full overflow-hidden">

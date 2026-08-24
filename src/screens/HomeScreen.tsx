@@ -299,7 +299,7 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({
           </div>
           <div className="p-2 rounded-lg bg-[#0C1526]">
             <div className="text-slate-400">Diffusion</div>
-            <div className="font-semibold text-slate-200 truncate">FLUX.1 Schnell</div>
+            <div className="font-semibold text-slate-200 truncate">FLUX.1 Dev</div>
           </div>
           <div className="p-2 rounded-lg bg-[#0C1526]">
             <div className="text-slate-400">Inference</div>

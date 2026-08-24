@@ -56,7 +56,7 @@ GROQ_API_KEY=your_groq_api_key_here
 GROQ_CHAT_MODEL=openai/gpt-oss-120b
 GROQ_CODE_MODEL=openai/gpt-oss-120b
 HF_API_TOKEN=your_huggingface_token_here
-HF_IMAGE_MODEL=black-forest-labs/FLUX.1-schnell
+HF_IMAGE_MODEL=black-forest-labs/FLUX.1-dev
 PORT=3000
 NODE_ENV=production
 ```
@@ -101,7 +101,7 @@ Add the following in Render's **Environment** tab:
 | `GROQ_CHAT_MODEL` | `llama-3.3-70b-versatile` | Default Groq chat model |
 | `GROQ_CODE_MODEL` | `llama-3.3-70b-versatile` | Default Groq code model |
 | `HF_API_TOKEN` | `hf_...` | Hugging Face token |
-| `HF_IMAGE_MODEL` | `black-forest-labs/FLUX.1-schnell` | Hugging Face image model |
+| `HF_IMAGE_MODEL` | `black-forest-labs/FLUX.1-dev` | Hugging Face image model |
 
 *Note: Render automatically sets and manages `PORT`.*
 
