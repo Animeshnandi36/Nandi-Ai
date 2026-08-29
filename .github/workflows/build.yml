@@ -1,0 +1,147 @@
+name: CI/CD Build & Test Pipeline
+
+# Triggers for continuous integration on push and pull requests
+on:
+  push:
+    branches:
+      - main
+      - master
+  pull_request:
+    branches:
+      - main
+      - master
+  workflow_dispatch: # Allows manual trigger from GitHub Actions UI
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  # =========================================================================
+  # 1. Web Application: Lint, Typecheck & Production Build
+  # =========================================================================
+  web-build:
+    name: Build & Verify Web Application
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js 20
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: |
+          if [ -f "package-lock.json" ]; then
+            npm ci
+          else
+            npm install
+          fi
+
+      - name: Run Web Production Build (Vite)
+        run: npm run build
+
+      - name: Upload Web Build Artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: web-dist
+          path: dist/
+          retention-days: 14
+
+  # =========================================================================
+  # 2. Android Application: Unit Tests & APK Build
+  # =========================================================================
+  android-build:
+    name: Build & Test Android APK
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up JDK 17
+        uses: actions/setup-java@v4
+        with:
+          distribution: 'temurin'
+          java-version: '17'
+          cache: 'gradle'
+
+      - name: Set up Gradle Build Environment
+        uses: gradle/actions/setup-gradle@v4
+
+      - name: Make Gradle Wrapper Executable
+        run: |
+          if [ -f "gradlew" ]; then
+            chmod +x gradlew
+          fi
+
+      - name: Prepare Android Keystore Configuration
+        # Prepares debug keystore from repository base64 or fallback keytool,
+        # or decodes release keystore if RELEASE_KEYSTORE_BASE64 is provided in repository secrets.
+        run: |
+          mkdir -p ~/.android
+
+          # Setup debug keystore
+          if [ -f "debug.keystore.base64" ]; then
+            base64 -d debug.keystore.base64 > debug.keystore 2>/dev/null || true
+          fi
+          if [ ! -f "debug.keystore" ]; then
+            keytool -genkey -v -keystore debug.keystore -storepass android -alias androiddebugkey -keypass android -keyalg RSA -keysize 2048 -validity 10000 -dname "CN=Android Debug,O=Android,C=US" || true
+          fi
+
+          # Setup release keystore if secret is configured
+          if [ -n "${{ secrets.RELEASE_KEYSTORE_BASE64 }}" ]; then
+            echo "${{ secrets.RELEASE_KEYSTORE_BASE64 }}" | base64 -d > release-upload.jks
+            echo "KEYSTORE_PATH=$GITHUB_WORKSPACE/release-upload.jks" >> $GITHUB_ENV
+            echo "STORE_PASSWORD=${{ secrets.RELEASE_STORE_PASSWORD }}" >> $GITHUB_ENV
+            echo "KEY_PASSWORD=${{ secrets.RELEASE_KEY_PASSWORD }}" >> $GITHUB_ENV
+            echo "BUILD_RELEASE=true" >> $GITHUB_ENV
+          else
+            echo "BUILD_RELEASE=false" >> $GITHUB_ENV
+          fi
+
+      - name: Run Android Unit Tests
+        run: |
+          if [ -f "gradlew" ]; then
+            ./gradlew :app:testDebugUnitTest --no-daemon --stacktrace
+          else
+            gradle :app:testDebugUnitTest --no-daemon --stacktrace
+          fi
+
+      - name: Build Android APK
+        # Builds release APK if release secrets exist, otherwise builds debug APK
+        run: |
+          if [ "$BUILD_RELEASE" = "true" ]; then
+            echo "Building signed Release APK..."
+            if [ -f "gradlew" ]; then
+              ./gradlew :app:assembleRelease --no-daemon --stacktrace
+            else
+              gradle :app:assembleRelease --no-daemon --stacktrace
+            fi
+          else
+            echo "No release signing secrets detected. Building Debug APK..."
+            if [ -f "gradlew" ]; then
+              ./gradlew :app:assembleDebug --no-daemon --stacktrace
+            else
+              gradle :app:assembleDebug --no-daemon --stacktrace
+            fi
+          fi
+
+      - name: Locate and Package Generated APKs
+        id: package-apks
+        run: |
+          mkdir -p build-artifacts
+          find app/build/outputs/apk/ -name "*.apk" -exec cp {} build-artifacts/ \;
+          echo "Found APK files:"
+          ls -la build-artifacts/
+
+      - name: Upload Android APK Artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: NandiAi-Android-APK
+          path: build-artifacts/*.apk
+          retention-days: 30
