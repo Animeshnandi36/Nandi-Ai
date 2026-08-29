@@ -1,4 +1,8 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1024 1024" width="1024" height="1024">
+import fs from 'fs';
+import path from 'path';
+import { Resvg } from '@resvg/resvg-js';
+
+const svgContent = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1024 1024" width="1024" height="1024">
   <defs>
     <!-- Background Radial Gradient -->
     <radialGradient id="bgGrad" cx="50%" cy="50%" r="50%">
@@ -251,4 +255,25 @@
 
   <!-- Right Flanking Gold Divider -->
   <line x1="568" y1="850" x2="688" y2="850" stroke="url(#cyberGold)" stroke-width="5.5" stroke-linecap="round" />
-</svg>
+</svg>`;
+
+// Write to public/assets/nandi-logo.png
+const resvg = new Resvg(svgContent, {
+  fitTo: {
+    mode: 'width',
+    value: 1024
+  }
+});
+
+const pngData = resvg.render();
+const pngBuffer = pngData.asPng();
+
+const targetPath = path.join(process.cwd(), 'public/assets/nandi-logo.png');
+fs.mkdirSync(path.dirname(targetPath), { recursive: true });
+fs.writeFileSync(targetPath, pngBuffer);
+
+// Also update public/favicon.svg
+fs.writeFileSync(path.join(process.cwd(), 'public/favicon.svg'), svgContent);
+
+console.log('✅ Successfully created public/assets/nandi-logo.png (1024x1024 PNG)');
+console.log('✅ Updated public/favicon.svg');

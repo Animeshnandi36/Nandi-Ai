@@ -17,7 +17,9 @@ import {
   Terminal,
   Bot,
   User,
-  X
+  X,
+  Trash2,
+  PlusCircle
 } from 'lucide-react';
 import { ChatMessage, Conversation } from '../types';
 import { sendChatMessage } from '../services/api';
@@ -49,6 +51,7 @@ export const ChatScreen: React.FC<ChatScreenProps> = ({
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
   const recognitionRef = useRef<any>(null);
+  const abortControllerRef = useRef<AbortController | null>(null);
 
   // Auto scroll to bottom
   useEffect(() => {
@@ -146,6 +149,26 @@ export const ChatScreen: React.FC<ChatScreenProps> = ({
     }
   };
 
+  const handleStopGeneration = () => {
+    if (abortControllerRef.current) {
+      abortControllerRef.current.abort();
+      abortControllerRef.current = null;
+    }
+    setIsLoading(false);
+  };
+
+  const handleClearCurrentChat = () => {
+    if (!activeConversation) return;
+    if (confirm('Clear all messages in this conversation?')) {
+      const updatedConv: Conversation = {
+        ...activeConversation,
+        messages: [],
+        updatedAt: Date.now()
+      };
+      onUpdateConversation(updatedConv);
+    }
+  };
+
   const handleSendMessage = async (textToSend?: string) => {
     const messageContent = (textToSend || input).trim();
     if (!messageContent && !imagePreview && !fileAttachment) return;
@@ -165,18 +188,24 @@ export const ChatScreen: React.FC<ChatScreenProps> = ({
     };
 
     const updatedMessages = [...conv.messages, userMessage];
-    const updatedConv: Conversation = {
+    const initialConv: Conversation = {
       ...conv,
       title: conv.messages.length === 0 ? (messageContent.slice(0, 32) || 'Image Query') : conv.title,
       updatedAt: Date.now(),
       messages: updatedMessages
     };
 
-    onUpdateConversation(updatedConv);
+    onUpdateConversation(initialConv);
     setInput('');
     setImagePreview(null);
     setFileAttachment(null);
     setIsLoading(true);
+
+    const assistantMsgId = `msg-${Date.now() + 1}`;
+    let accumulatedContent = '';
+
+    const abortController = new AbortController();
+    abortControllerRef.current = abortController;
 
     try {
       // Build conversation payload
@@ -189,35 +218,57 @@ export const ChatScreen: React.FC<ChatScreenProps> = ({
         ? 'You are NandiAi with real-time web grounding. Provide accurate answers with technical depth, citations, and clear structure.'
         : undefined;
 
-      const response = await sendChatMessage(historyPayload, activeModel, systemPrompt);
+      const response = await sendChatMessage(
+        historyPayload,
+        activeModel,
+        systemPrompt,
+        (token) => {
+          accumulatedContent += token;
+          const liveAssistantMessage: ChatMessage = {
+            id: assistantMsgId,
+            role: 'assistant',
+            content: accumulatedContent,
+            timestamp: Date.now(),
+            model: activeModel
+          };
+          onUpdateConversation({
+            ...initialConv,
+            messages: [...updatedMessages, liveAssistantMessage]
+          });
+        },
+        abortController.signal
+      );
 
-      const assistantMessage: ChatMessage = {
-        id: `msg-${Date.now() + 1}`,
+      const finalAssistantMessage: ChatMessage = {
+        id: assistantMsgId,
         role: 'assistant',
-        content: response.content,
+        content: response.content || accumulatedContent,
         timestamp: Date.now(),
         model: response.model || activeModel
       };
 
       onUpdateConversation({
-        ...updatedConv,
-        messages: [...updatedMessages, assistantMessage]
+        ...initialConv,
+        messages: [...updatedMessages, finalAssistantMessage]
       });
     } catch (err: any) {
-      const errorMessage: ChatMessage = {
-        id: `msg-err-${Date.now()}`,
-        role: 'assistant',
-        content: `### ⚠️ Connection Notice\n\nCould not reach the neural inference server. Please check your network connection or verify that \`GROQ_API_KEY\` is configured in your Render environment variables.\n\n*Error details*: ${err.message}`,
-        timestamp: Date.now(),
-        isError: true
-      };
+      if (err.message !== 'Generation stopped.') {
+        const errorMessage: ChatMessage = {
+          id: `msg-err-${Date.now()}`,
+          role: 'assistant',
+          content: `Something went wrong. Please try again.`,
+          timestamp: Date.now(),
+          isError: true
+        };
 
-      onUpdateConversation({
-        ...updatedConv,
-        messages: [...updatedMessages, errorMessage]
-      });
+        onUpdateConversation({
+          ...initialConv,
+          messages: [...updatedMessages, errorMessage]
+        });
+      }
     } finally {
       setIsLoading(false);
+      abortControllerRef.current = null;
     }
   };
 
@@ -231,13 +282,18 @@ export const ChatScreen: React.FC<ChatScreenProps> = ({
       (m, idx) => !(idx === activeConversation.messages.length - 1 && m.role === 'assistant')
     );
 
-    const updatedConv = {
+    const initialConv = {
       ...activeConversation,
       messages: messagesWithoutLastAssistant
     };
 
-    onUpdateConversation(updatedConv);
+    onUpdateConversation(initialConv);
     setIsLoading(true);
+
+    const assistantMsgId = `msg-${Date.now()}`;
+    let accumulatedContent = '';
+    const abortController = new AbortController();
+    abortControllerRef.current = abortController;
 
     try {
       const historyPayload = messagesWithoutLastAssistant.map((m) => ({
@@ -245,23 +301,56 @@ export const ChatScreen: React.FC<ChatScreenProps> = ({
         content: m.content
       }));
 
-      const response = await sendChatMessage(historyPayload, activeModel);
-      const assistantMessage: ChatMessage = {
-        id: `msg-${Date.now()}`,
+      const response = await sendChatMessage(
+        historyPayload,
+        activeModel,
+        undefined,
+        (token) => {
+          accumulatedContent += token;
+          const liveAssistantMessage: ChatMessage = {
+            id: assistantMsgId,
+            role: 'assistant',
+            content: accumulatedContent,
+            timestamp: Date.now(),
+            model: activeModel
+          };
+          onUpdateConversation({
+            ...initialConv,
+            messages: [...messagesWithoutLastAssistant, liveAssistantMessage]
+          });
+        },
+        abortController.signal
+      );
+
+      const finalAssistantMessage: ChatMessage = {
+        id: assistantMsgId,
         role: 'assistant',
-        content: response.content,
+        content: response.content || accumulatedContent,
         timestamp: Date.now(),
         model: response.model || activeModel
       };
 
       onUpdateConversation({
-        ...updatedConv,
-        messages: [...messagesWithoutLastAssistant, assistantMessage]
+        ...initialConv,
+        messages: [...messagesWithoutLastAssistant, finalAssistantMessage]
       });
     } catch (err: any) {
-      // Handle gracefully
+      if (err.message !== 'Generation stopped.') {
+        const errorMessage: ChatMessage = {
+          id: `msg-err-${Date.now()}`,
+          role: 'assistant',
+          content: 'Something went wrong. Please try again.',
+          timestamp: Date.now(),
+          isError: true
+        };
+        onUpdateConversation({
+          ...initialConv,
+          messages: [...messagesWithoutLastAssistant, errorMessage]
+        });
+      }
     } finally {
       setIsLoading(false);
+      abortControllerRef.current = null;
     }
   };
 
@@ -274,6 +363,40 @@ export const ChatScreen: React.FC<ChatScreenProps> = ({
 
   return (
     <div className="flex-1 flex flex-col h-full bg-[#060A12] overflow-hidden relative">
+      {/* Top Chat Subheader with Actions */}
+      <div className="px-4 py-2 border-b border-[#1E2F4D]/50 bg-[#080E1A] flex items-center justify-between text-xs text-slate-400">
+        <div className="flex items-center gap-2">
+          <span className="font-semibold text-slate-300 truncate max-w-[200px]">
+            {activeConversation?.title || 'New Chat'}
+          </span>
+          <span className="text-[11px] px-2 py-0.5 rounded-full bg-[#101F38] text-[#00F0FF] font-mono">
+            {activeModel.split('/')[1] || activeModel}
+          </span>
+        </div>
+
+        <div className="flex items-center gap-2">
+          <button
+            onClick={() => onCreateNewChat()}
+            className="flex items-center gap-1 px-2.5 py-1 rounded-lg bg-[#0F1A2E] border border-[#1E2F4D] text-slate-300 hover:text-[#00F0FF] hover:border-[#00F0FF]/40 transition-colors"
+            title="Start new conversation"
+          >
+            <PlusCircle size={13} />
+            <span className="hidden sm:inline">New Chat</span>
+          </button>
+
+          {activeConversation && activeConversation.messages.length > 0 && (
+            <button
+              onClick={handleClearCurrentChat}
+              className="flex items-center gap-1 px-2.5 py-1 rounded-lg bg-[#0F1A2E] border border-[#1E2F4D] text-slate-400 hover:text-rose-400 hover:border-rose-700/50 transition-colors"
+              title="Clear chat messages"
+            >
+              <Trash2 size={13} />
+              <span className="hidden sm:inline">Clear</span>
+            </button>
+          )}
+        </div>
+      </div>
+
       {/* Messages Scroll Area */}
       <div className="flex-1 overflow-y-auto p-4 md:p-6 space-y-6 max-w-4xl w-full mx-auto">
         {(!activeConversation || activeConversation.messages.length === 0) ? (
@@ -300,7 +423,7 @@ export const ChatScreen: React.FC<ChatScreenProps> = ({
                   <button
                     key={idx}
                     onClick={() => handleSendMessage(item.title + ' - ' + item.desc)}
-                    className="p-3.5 rounded-xl bg-[#0B1322] border border-[#1E2F4D] hover:border-[#00F0FF]/50 hover:bg-[#101C33] transition-all group active:scale-[0.99]"
+                    className="p-3.5 rounded-xl bg-[#0B1322] border border-[#1E2F4D] hover:border-[#00F0FF]/50 hover:bg-[#101C33] transition-all group active:scale-[0.99] min-h-[48px]"
                   >
                     <div className="flex items-center gap-2.5 mb-1.5">
                       <div className="p-1.5 rounded-lg bg-[#0F1D38] text-[#00F0FF] group-hover:text-white transition-colors">
@@ -370,7 +493,7 @@ export const ChatScreen: React.FC<ChatScreenProps> = ({
                     <div className="flex items-center gap-3 mt-1.5 pl-1 text-slate-400 text-xs">
                       <button
                         onClick={() => handleCopy(msg.content, msg.id)}
-                        className="flex items-center gap-1 hover:text-white transition-colors"
+                        className="flex items-center gap-1 hover:text-white transition-colors min-h-[32px] px-1"
                         title="Copy message"
                       >
                         {copiedMsgId === msg.id ? (
@@ -383,7 +506,7 @@ export const ChatScreen: React.FC<ChatScreenProps> = ({
 
                       <button
                         onClick={() => handleSpeak(msg.content, msg.id)}
-                        className="flex items-center gap-1 hover:text-white transition-colors"
+                        className="flex items-center gap-1 hover:text-white transition-colors min-h-[32px] px-1"
                         title="Read aloud"
                       >
                         {isSpeaking === msg.id ? (
@@ -469,7 +592,7 @@ export const ChatScreen: React.FC<ChatScreenProps> = ({
             <div className="flex items-center gap-3">
               <button
                 onClick={() => setWebSearchEnabled(!webSearchEnabled)}
-                className={`flex items-center gap-1 px-2 py-1 rounded-lg border transition-colors ${
+                className={`flex items-center gap-1 px-2 py-1 rounded-lg border transition-colors min-h-[32px] ${
                   webSearchEnabled
                     ? 'bg-[#00F0FF]/10 border-[#00F0FF]/40 text-[#00F0FF]'
                     : 'bg-[#0F1A2E] border-[#1E2F4D] text-slate-400 hover:text-slate-200'
@@ -483,7 +606,7 @@ export const ChatScreen: React.FC<ChatScreenProps> = ({
                 <button
                   onClick={handleRegenerate}
                   disabled={isLoading}
-                  className="flex items-center gap-1 px-2 py-1 rounded-lg bg-[#0F1A2E] border border-[#1E2F4D] text-slate-400 hover:text-white transition-colors disabled:opacity-50"
+                  className="flex items-center gap-1 px-2 py-1 rounded-lg bg-[#0F1A2E] border border-[#1E2F4D] text-slate-400 hover:text-white transition-colors disabled:opacity-50 min-h-[32px]"
                 >
                   <RotateCcw size={12} />
                   <span>Regenerate</span>
@@ -492,7 +615,7 @@ export const ChatScreen: React.FC<ChatScreenProps> = ({
             </div>
 
             <div className="text-[11px] text-slate-400">
-              Model: <span className="text-[#00F0FF] font-mono">{activeModel.split('-')[0]}</span>
+              Model: <span className="text-[#00F0FF] font-mono">{activeModel.split('/')[1] || activeModel}</span>
             </div>
           </div>
 
@@ -508,8 +631,9 @@ export const ChatScreen: React.FC<ChatScreenProps> = ({
             />
             <button
               onClick={() => fileInputRef.current?.click()}
-              className="p-2 text-slate-400 hover:text-[#00F0FF] rounded-xl hover:bg-[#101B2E] transition-colors"
+              className="p-2.5 text-slate-400 hover:text-[#00F0FF] rounded-xl hover:bg-[#101B2E] transition-colors min-h-[48px] min-w-[48px] flex items-center justify-center"
               title="Attach File or Image"
+              aria-label="Attach File or Image"
             >
               <Paperclip size={18} />
             </button>
@@ -517,12 +641,13 @@ export const ChatScreen: React.FC<ChatScreenProps> = ({
             {/* Voice Input Button */}
             <button
               onClick={toggleRecording}
-              className={`p-2 rounded-xl transition-colors ${
+              className={`p-2.5 rounded-xl transition-colors min-h-[48px] min-w-[48px] flex items-center justify-center ${
                 isRecording
                   ? 'bg-rose-500 text-white animate-pulse'
                   : 'text-slate-400 hover:text-[#00F0FF] hover:bg-[#101B2E]'
               }`}
               title={isRecording ? 'Listening...' : 'Voice Input'}
+              aria-label={isRecording ? 'Listening...' : 'Voice Input'}
             >
               {isRecording ? <MicOff size={18} /> : <Mic size={18} />}
             </button>
@@ -539,15 +664,16 @@ export const ChatScreen: React.FC<ChatScreenProps> = ({
               }}
               placeholder={isRecording ? 'Listening to voice...' : 'Ask NandiAi anything (Groq LPU)...'}
               rows={1}
-              className="flex-1 bg-transparent border-0 text-slate-100 placeholder-slate-400 text-sm focus:outline-none resize-none py-1.5 max-h-32 min-h-[24px]"
+              className="flex-1 bg-transparent border-0 text-slate-100 placeholder-slate-400 text-sm focus:outline-none resize-none py-2.5 max-h-32 min-h-[28px]"
             />
 
             {/* Send or Stop Button */}
             {isLoading ? (
               <button
-                onClick={() => setIsLoading(false)}
-                className="p-2 rounded-xl bg-rose-600 text-white hover:bg-rose-500 active:scale-95 transition-all"
+                onClick={handleStopGeneration}
+                className="p-2.5 rounded-xl bg-rose-600 text-white hover:bg-rose-500 active:scale-95 transition-all min-h-[48px] min-w-[48px] flex items-center justify-center shadow-md"
                 title="Stop generation"
+                aria-label="Stop generation"
               >
                 <Square size={16} fill="currentColor" />
               </button>
@@ -555,8 +681,9 @@ export const ChatScreen: React.FC<ChatScreenProps> = ({
               <button
                 onClick={() => handleSendMessage()}
                 disabled={!input.trim() && !imagePreview && !fileAttachment}
-                className="p-2 rounded-xl bg-gradient-to-r from-[#00F0FF] to-[#0099FF] text-black font-bold disabled:opacity-40 disabled:cursor-not-allowed hover:brightness-110 active:scale-95 transition-all shadow-neon-cyan/20"
+                className="p-2.5 rounded-xl bg-gradient-to-r from-[#00F0FF] to-[#0099FF] text-black font-bold disabled:opacity-40 disabled:cursor-not-allowed hover:brightness-110 active:scale-95 transition-all shadow-neon-cyan/20 min-h-[48px] min-w-[48px] flex items-center justify-center"
                 title="Send Message (Enter)"
+                aria-label="Send Message"
               >
                 <Send size={18} />
               </button>
