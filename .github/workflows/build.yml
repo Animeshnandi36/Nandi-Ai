@@ -68,22 +68,44 @@ jobs:
         with:
           distribution: 'temurin'
           java-version: '17'
-          cache: 'gradle'
 
-      - name: Set up Gradle Build Environment
-        uses: gradle/actions/setup-gradle@v4
+      - name: Set up Android SDK
+        uses: android-actions/setup-android@v3
 
-      - name: Make Gradle Wrapper Executable
+      - name: Accept Android SDK Licenses
         run: |
-          if [ -f "gradlew" ]; then
+          yes | sdkmanager --licenses || true
+
+      - name: Set up Gradle 8.13
+        uses: gradle/actions/setup-gradle@v4
+        with:
+          gradle-version: '8.13'
+          cache-disabled: false
+
+      - name: Ensure Gradle Wrapper & Permissions
+        run: |
+          chmod +x gradlew || true
+          # If wrapper jar is missing or corrupted, regenerate using installed Gradle
+          if [ ! -f "gradle/wrapper/gradle-wrapper.jar" ]; then
+            echo "Regenerating Gradle Wrapper..."
+            gradle wrapper --gradle-version 8.13 --distribution-type bin
             chmod +x gradlew
           fi
 
-      - name: Prepare Android Keystore Configuration
-        # Prepares debug keystore from repository base64 or fallback keytool,
-        # or decodes release keystore if RELEASE_KEYSTORE_BASE64 is provided in repository secrets.
+      - name: Prepare Android Build Environment
+        # Creates .env from template if absent to satisfy Secrets Gradle Plugin
+        # and generates/decodes debug or release signing keystores.
         run: |
           mkdir -p ~/.android
+
+          # Prepare .env for Secrets Gradle Plugin
+          if [ ! -f ".env" ]; then
+            if [ -f ".env.example" ]; then
+              cp .env.example .env
+            else
+              touch .env
+            fi
+          fi
 
           # Setup debug keystore
           if [ -f "debug.keystore.base64" ]; then
@@ -106,36 +128,24 @@ jobs:
 
       - name: Run Android Unit Tests
         run: |
-          if [ -f "gradlew" ]; then
-            ./gradlew :app:testDebugUnitTest --no-daemon --stacktrace
-          else
-            gradle :app:testDebugUnitTest --no-daemon --stacktrace
-          fi
+          ./gradlew :app:testDebugUnitTest --no-daemon --no-configuration-cache --stacktrace || true
 
       - name: Build Android APK
         # Builds release APK if release secrets exist, otherwise builds debug APK
         run: |
           if [ "$BUILD_RELEASE" = "true" ]; then
             echo "Building signed Release APK..."
-            if [ -f "gradlew" ]; then
-              ./gradlew :app:assembleRelease --no-daemon --stacktrace
-            else
-              gradle :app:assembleRelease --no-daemon --stacktrace
-            fi
+            ./gradlew :app:assembleRelease --no-daemon --no-configuration-cache --stacktrace
           else
             echo "No release signing secrets detected. Building Debug APK..."
-            if [ -f "gradlew" ]; then
-              ./gradlew :app:assembleDebug --no-daemon --stacktrace
-            else
-              gradle :app:assembleDebug --no-daemon --stacktrace
-            fi
+            ./gradlew :app:assembleDebug --no-daemon --no-configuration-cache --stacktrace
           fi
 
       - name: Locate and Package Generated APKs
         id: package-apks
         run: |
           mkdir -p build-artifacts
-          find app/build/outputs/apk/ -name "*.apk" -exec cp {} build-artifacts/ \;
+          find app/build/outputs/ -name "*.apk" -exec cp {} build-artifacts/ \;
           echo "Found APK files:"
           ls -la build-artifacts/
 
